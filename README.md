@@ -1,7 +1,6 @@
 # AI Driven Travel Recommendation Engine
 
-MERN stack project inspired by Airbnb.
-Built step by step.
+MERN stack project inspired AI intregrated
 
 ## Tech Stack
 - Node.js
@@ -9,7 +8,8 @@ Built step by step.
 - MongoDB
 - Mongoose
 
-## Day 1 Progress 
+
+ Day 1 - 
 - Project folder setup
 - Express app setup
 - MongoDB connection
