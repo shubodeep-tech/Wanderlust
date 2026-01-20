@@ -9,7 +9,7 @@ MERN stack project inspired AI intregrated
 - Mongoose
 
 
- Day 1 - 
+ Day 1 - Project Setup
 - Project folder setup
 - Express app setup
 - MongoDB connection
@@ -52,7 +52,7 @@ Files Updated
 	•	models/
 	•	views/
 
-Day 3 – UI Layout & Styling (Wanderlust)
+Day 3 – UI Layout & Styling 
 
 Work Done
 	•	Created main boilerplate layout using EJS
