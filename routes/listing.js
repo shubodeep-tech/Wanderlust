@@ -35,6 +35,12 @@ router.post("/", validateListing, wrapAsync(async (req, res) => {
   res.redirect(`/listings/${newListing._id}`);
 }));
 
+// UPDATE
+router.put("/:id", validateListing, wrapAsync(async (req, res) => {
+  await Listing.findByIdAndUpdate(req.params.id, req.body.listing);
+  res.redirect(`/listings/${req.params.id}`);
+}));
+
 // EDIT
 router.get("/:id/edit", wrapAsync(async (req, res) => {
   const listing = await Listing.findById(req.params.id);
@@ -42,11 +48,7 @@ router.get("/:id/edit", wrapAsync(async (req, res) => {
   res.render("listings/edit", { listing });
 }));
 
-// UPDATE
-router.put("/:id", validateListing, wrapAsync(async (req, res) => {
-  await Listing.findByIdAndUpdate(req.params.id, req.body.listing);
-  res.redirect(`/listings/${req.params.id}`);
-}));
+
 
 // SHOW (ALWAYS LAST)
 router.get("/:id", wrapAsync(async (req, res) => {
