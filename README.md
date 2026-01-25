@@ -9,7 +9,8 @@ MERN stack project inspired AI intregrated
 - Mongoose
 
 
- Day 1 - Project Setup
+ Day 1 - Project Setup:
+
 - Project folder setup
 - Express app setup
 - MongoDB connection
@@ -80,7 +81,7 @@ Progress
 	•	Built a centralized error handling mechanism
 	•	Validated incoming request data using schema-based middleware
 
-What I Worked On
+What I Worked On:
 	•	Implemented client-side form validation using Bootstrap validation feedback
 	•	Handled invalid form submissions gracefully
 	•	Created a custom ExpressError class for structured error handling
@@ -88,7 +89,7 @@ What I Worked On
 	•	Added schema-based validation middleware for request validation
 	•	Returned meaningful and readable error messages to users
 
-Concepts Used
+Concepts Used:
 	•	Custom Error Class (ExpressError)
 	•	Express Error Handling Middleware
 	•	Client-side Form Validation
