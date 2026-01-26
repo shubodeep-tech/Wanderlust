@@ -55,7 +55,7 @@
           <label class="form-label">Price</label>
           <input
             name="listing[price]"
-            
+            value="<%= listing.price %>"
             placeholder="1200"
             class="form-control"
             required
@@ -68,6 +68,7 @@
           <input
             name="listing[country]"
             type="text"
+            value = <%="listing.country" %>
             placeholder="Enter country"
             class="form-control"
             required
@@ -83,7 +84,6 @@
           type="text"
           name="listing[location]"
           class="form-control"
-          value="<%= listing.location %>"
           required
         />
         <div class="invalid-feedback">Location must be valid</div>
