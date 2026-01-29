@@ -352,3 +352,91 @@ Outcome
 	•	Secure signup and login system implemented
 	•	User authentication working with sessions
 	•	Ready to add authorization and protected routes next
+
+
+Day 9 – Authorization (Listings & Reviews)
+
+📌 Project Phase
+
+Sigma 5 – Development
+Project – Phase 2 (Part e)
+
+⸻
+
+🔐 Topic: Authorization Implementation
+
+On Day 9, the focus was on implementing authorization in the application to ensure that only permitted users can perform sensitive actions like editing or deleting listings and reviews.
+
+This step strengthens security, ownership control, and real-world correctness of the application.
+
+⸻
+
+🎯 Features Implemented
+
+✅ Authentication Flow
+	•	Login route connected
+	•	Logout functionality added
+	•	Automatic login after signup
+	•	Post-login redirection handling
+	•	UI styling for auth pages
+
+⸻
+
+✅ Listing Authorization
+	•	Each listing is associated with an owner
+	•	Only the listing owner can:
+	•	Edit a listing
+	•	Delete a listing
+	•	Unauthorized users are blocked with proper feedback
+
+⸻
+
+✅ Review Authorization (Added)
+	•	Each review is associated with an author
+	•	Only the review author can:
+	•	Delete their review
+	•	Prevents misuse and unauthorized data modification
+
+⸻
+
+🧠 Key Concepts Covered
+	•	Difference between authentication vs authorization
+	•	Ownership-based access control
+	•	Route protection using middleware
+	•	Secure handling of user permissions
+	•	Flash messages for better UX
+
+⸻
+
+🛠️ Tech Stack Used
+	•	Node.js
+	•	Express.js
+	•	MongoDB & Mongoose
+	•	Passport.js (Authentication)
+	•	EJS Templates
+	•	Connect-Flash
+
+⸻
+
+🔒 Security Improvements
+	•	Protected routes from unauthorized access
+	•	Ensured data integrity for listings and reviews
+	•	Followed real-world backend authorization practices
+
+⸻
+
+📈 Learning Outcome
+	•	Learned how large applications enforce user permissions
+	•	Implemented scalable authorization logic
+	•	Improved backend structure using reusable middleware
+	•	Built production-ready access control patterns
+
+⸻
+
+✅ Status
+
+✔ Login & Logout completed
+✔ Listing ownership enforced
+✔ Review authorization implemented
+✔ Fully functional and tested
+
