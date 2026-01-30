@@ -6,9 +6,10 @@ body {
 }
 
 .container {
-    flex: 1;
+  max-width: 100% !important;
+  padding-left: 0;
+  padding-right: 0;
 }
-
 /* Navbar */
 .navbar {
     height: 5rem;
@@ -138,4 +139,46 @@ body {
 .show-card{
     padding-left: 0;
     padding-right: 0;
+}
+
+
+/* map */
+
+#map {
+  height: 400px;
+  width: 100%;
+  border-radius: 10px;
+}
+.map-container {
+  height: 400px;
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  margin-bottom: 2rem;
+}
+
+/* ===== SHOW PAGE (GRID FREE) ===== */
+
+.show-wrapper {
+  width: 100%;
+}
+
+.show-title {
+  max-width: 800px;
+  margin: 1.5rem auto;
+  text-align: center;
+}
+
+.show-card-wrapper,
+.content-wrapper,
+.map-wrapper {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2.5rem;
+}
+
+.btns {
+  display: flex;
+  gap: 0.5rem;
 }

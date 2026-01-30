@@ -1,104 +1,134 @@
 <% layout("/layouts/boilerplate") %>
 
-<div class="row mt-3">
+<!-- ===== MAP DATA (must be before map.js) ===== -->
+<script>
+  const mapToken = "<%= process.env.MAP_TOKEN %>";
+  const listingData = <%- JSON.stringify(listing) %>;
+</script>
 
-  <!-- Title -->
-  <div class="col-8 offset-3">
-    <h3><%= listing.title %></h3>
+<!-- ================= PAGE WRAPPER ================= -->
+<div class="show-wrapper">
+
+  <!-- ================= TITLE ================= -->
+  <h3 class="show-title"><%= listing.title %></h3>
+
+  <!-- ================= LISTING CARD ================= -->
+  <div class="show-card-wrapper">
+    <div class="card listing-card">
+      <img
+        src="<%= listing.image.url %>"
+        class="card-img-top"
+        alt="listing image"
+      />
+
+      <div class="card-body">
+        <p class="text-muted mb-1">
+          Owned by <b><%= listing.owner.username %></b>
+        </p>
+
+        <p><%= listing.description %></p>
+
+        <p class="fw-bold">
+          ₹ <%= listing.price.toLocaleString("en-IN") %>
+        </p>
+
+        <p class="text-muted">
+          <%= listing.location %>, <%= listing.country %>
+        </p>
+
+        <% if (currUser && listing.owner._id.equals(currUser._id)) { %>
+          <div class="btns mt-2">
+            <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark edit-btn">
+              Edit
+            </a>
+
+            <form
+              method="POST"
+              action="/listings/<%= listing._id %>?_method=DELETE"
+            >
+              <button class="btn btn-dark">Delete</button>
+            </form>
+          </div>
+        <% } %>
+      </div>
+    </div>
   </div>
 
-  <!-- Listing Card -->
-  <div class="col-6 offset-3 show-card">
-            <div class="card listing-card">
-                 <img 
-                 src="<%= listing.image.url %>" 
-                 class="card-img-top shoe-img" alt="listing_image"
-                 />
-                <div class="card-body">
-                    <p class="card-text">
-                        <b><%= listing.title %></b><br>
-                        <%= listing.description %>
-                         &#8377; <%= listing.price.toLocaleString("en-IN")%><br>
-                        <%= listing.location %><br>
-                        <%= listing.country %><br>
-                    </p>
-                </div>
-            </div>
-        </div>
-  <!-- Buttons -->
-  <br/>
-        <div class="btns">
-            <a href="/listings/<%= listing._id %>/edit" 
-                class="btn btn-dark col-1 offset-3 edit-btn"
-                >Edit</a
-            >
-
-             <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
-               <button class="btn btn-dark  offset-3">Delete</button>
-            </form>
-        </div>        
-  <!-- Review Form -->
-  <div class="col-8 offset-3 mt-4 mb-3">
-    <hr />
-    <h4>Leave a review</h4>
-
-    <form
-      action="/listings/<%= listing._id %>/reviews"
-      method="POST"
-      novalidate
-      class="needs-validation"
-    >
-      <!-- Rating -->
-      <div class="mb-3 mt-3">
-        <label for="rating" class="form-label">Rating</label>
-        <input
-          type="range"
-          min="1"
-          max="5"
-          id="rating"
-          name="review[rating]"
-          class="form-range"
-        />
-      </div>
-
-      <!-- Comment -->
-      <div class="mb-3 mt-3">
-        <label for="comment" class="form-label">Comments</label>
-        <textarea
-          name="review[comment]"
-          id="comment"
-          rows="5"
-          class="form-control"
-          required
-        ></textarea>
-        <div class="invalid-feedback">Please submit some comments for review</div>
-      </div>
-      <button class="btn btn-outline-dark">Submit</button>
-    </form>
-
-
-    <hr />
-
-    <h4><b>All Reviews</b></h4>
-
-<% if (listing.reviews.length === 0) { %>
-  <p>No reviews yet</p>
-<% } else { %>
-  <% for (let review of listing.reviews) { %>
-    <div class="card col-5 ms-3 mb-3">
-      <div class="card-body">
-        <h5 class="card-title">John Doe</h5>
-        <p class="card-text"><%= review.comment %></p>
-        <p class="card-text"><%= review.rating %> stars</p>
-      </div>
+  <!-- ================= REVIEW FORM ================= -->
+  <div class="content-wrapper">
+    <% if (currUser) { %>
+      <hr />
+      <h4>Leave a review</h4>
 
       <form
+        action="/listings/<%= listing._id %>/reviews"
         method="POST"
-        action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
+        class="needs-validation"
+        novalidate
       >
-        <button class="btn btn-sm btn-dark">Delete</button>
+        <div class="mb-3">
+          <label class="form-label">Rating</label>
+          <input
+            type="range"
+            min="1"
+            max="5"
+            name="review[rating]"
+            class="form-range"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Comments</label>
+          <textarea
+            name="review[comment]"
+            rows="4"
+            class="form-control"
+            required
+          ></textarea>
+        </div>
+
+        <button class="btn btn-outline-dark">Submit</button>
       </form>
-    </div>
-  <% } %>
-<% } %>
+    <% } %>
+
+    <!-- ================= ALL REVIEWS ================= -->
+    <hr />
+    <h4>All Reviews</h4>
+
+    <% if (listing.reviews.length === 0) { %>
+      <p class="text-muted">No reviews yet</p>
+    <% } %>
+
+    <% for (let review of listing.reviews) { %>
+      <div class="card mb-3">
+        <div class="card-body">
+          <h6>
+            @<%= review.author ? review.author.username : "Anonymous" %>
+          </h6>
+          <p class="mb-1"><%= review.comment %></p>
+          <small class="text-muted"><%= review.rating %> stars</small>
+        </div>
+
+        <% if (currUser && review.author && review.author._id.equals(currUser._id)) { %>
+          <form
+            method="POST"
+            action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
+            class="p-2"
+          >
+            <button class="btn btn-sm btn-dark">Delete</button>
+          </form>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+
+  <!-- ================= MAP ================= -->
+  <div class="map-wrapper">
+    <h4 class="mb-3">Where you'll be</h4>
+    <div id="map"></div>
+  </div>
+
 </div>
+
+<!-- ================= MAP SCRIPT ================= -->
+<script src="/js/map.js"></script>
