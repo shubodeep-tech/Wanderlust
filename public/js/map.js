@@ -1,10 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ✅ ADD HERE (VERY FIRST THING)
   const mapDiv = document.getElementById("map");
   if (!mapDiv) return;
 
-  // existing checks
   if (!mapToken || typeof mapboxgl === "undefined") return;
 
   if (typeof listingData === "undefined") {
@@ -12,9 +10,13 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
+  // ✅ ADD DEBUG HERE
+  console.log("Listing Data:", listingData);
+  console.log("Coordinates:", listingData?.geometry?.coordinates);
+
   mapboxgl.accessToken = mapToken;
 
-  let coords = [77.2090, 28.6139];
+  let coords = [77.2090, 28.6139]; // fallback (Delhi)
 
   if (
     Array.isArray(listingData?.geometry?.coordinates) &&

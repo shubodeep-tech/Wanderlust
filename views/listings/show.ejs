@@ -4,7 +4,6 @@
 
   <h2 class="show-title"><%= listing.title %></h2>
 
-
   <div class="position-relative">
     <img src="<%= listing.image.url %>" class="show-img" />
 
@@ -55,9 +54,14 @@
   <div class="content-wrapper">
 
     <% if (currUser) { %>
+      <hr />
       <h4>Leave a review</h4>
 
-      <form action="/listings/<%= listing._id %>/reviews" method="POST">
+      <form 
+      action="/listings/<%= listing._id %>/reviews" 
+      method="POST"
+      novalidate
+      class="needs-validation">
         <input type="range" min="1" max="5" name="review[rating]" />
         <textarea name="review[comment]" class="form-control mt-2"></textarea>
         <button class="btn btn-dark mt-2">Submit</button>
@@ -65,6 +69,7 @@
 
       <div class="divider"></div>
     <% } %>
+    <% if(listing.reviews.length > 0 ) {  %>
 
     <h4>All Reviews</h4>
 
@@ -77,15 +82,20 @@
         </div>
       </div>
     <% } %>
-
+    <% } %>
   </div>
-
-
-  <div class="map-wrapper">
+ <br>
+ <hr/>
+  <div class="col-14 mb-3">
     <h4>Where you'll be</h4>
     <div id="map"></div>
   </div>
 
 </div>
+<script>
+  const mapToken = "<%= mapToken %>";
+  const listingData = <%- JSON.stringify(listing) %>;
+</script>
 
 <script src="/js/map.js"></script>
+

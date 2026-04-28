@@ -7,6 +7,7 @@ const express = require("express");
 const app = express();
 
 const mongoose = require("mongoose");
+const MongoStore = require("connect-mongo").default;
 mongoose.set("strictQuery", true);
 
 const path = require("path");
@@ -41,12 +42,19 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 
 
-const MongoStore = require("connect-mongo").default;
+
 
 const store = MongoStore.create({
   mongoUrl: process.env.MONGO_URL,
+  cryto :{
+    secret :process.env.SESSION_SECRET,
+  },
   touchAfter: 24 * 3600,
 });
+
+store.on("error" ,() =>{
+  console.log("ERROR in MONGO SESSION STORE",err)
+})
 
 app.use(
   session({
