@@ -1,8 +1,7 @@
-if (process.env.NODE_ENV !== "production")
-   {
-   require("dotenv").config();
-   } 
-  
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const app = express();
 
@@ -41,20 +40,19 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 
-
-
-
+// ✅ FIXED MongoStore
 const store = MongoStore.create({
   mongoUrl: process.env.MONGO_URL,
-  cryto :{
-    secret :process.env.SESSION_SECRET,
+  crypto: {  // ✅ fixed
+    secret: process.env.SESSION_SECRET,
   },
   touchAfter: 24 * 3600,
 });
 
-store.on("error" ,() =>{
-  console.log("ERROR in MONGO SESSION STORE",err)
-})
+
+store.on("error", (err) => {
+  console.log("ERROR in MONGO SESSION STORE", err);
+});
 
 app.use(
   session({
@@ -88,7 +86,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
 // ================= ROUTES =================
 const listingRoutes = require("./routes/listings");
 const reviewRoutes = require("./routes/reviews");
@@ -98,9 +95,7 @@ const searchRoutes = require("./routes/search.routes");
 app.use("/listings", listingRoutes);
 app.use("/listings/:id/reviews", reviewRoutes);
 app.use("/", userRoutes);
-
 app.use("/ai", aiRoutes);
-
 
 // ================= ERROR HANDLING =================
 app.use((req, res, next) => {
@@ -112,9 +107,9 @@ app.use((err, req, res, next) => {
   res.status(statusCode).render("error", { err });
 });
 
-
-
 // ================= SERVER =================
-app.listen(8060, () => {
-  console.log("Serving on port 8060");
+const PORT = process.env.PORT || 8060;   
+
+app.listen(PORT, () => {
+  console.log("Serving on port", PORT);
 });
