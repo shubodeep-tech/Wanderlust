@@ -1,0 +1,81 @@
+<div class="mb-3">
+  <label class="form-label">Category</label>
+
+  <!-- Hidden input -->
+  <input 
+    type="hidden" 
+    name="listing[category]" 
+    id="category" 
+    value="<%= listing.category %>" 
+    required
+  />
+
+  <!-- CATEGORY BAR -->
+  <div class="filters-bar">
+
+    <div class="filter <%= listing.category === 'trending' ? 'active' : '' %>" data-category="trending">
+      <i class="fa-solid fa-fire"></i>
+      <span>Trending</span>
+    </div>
+
+    <div class="filter <%= listing.category === 'rooms' ? 'active' : '' %>" data-category="rooms">
+      <i class="fa-solid fa-bed"></i>
+      <span>Rooms</span>
+    </div>
+
+    <div class="filter <%= listing.category === 'iconic_cities' ? 'active' : '' %>" data-category="iconic_cities">
+      <i class="fa-solid fa-city"></i>
+      <span>Cities</span>
+    </div>
+
+    <div class="filter <%= listing.category === 'mountains' ? 'active' : '' %>" data-category="mountains">
+      <i class="fa-solid fa-mountain"></i>
+      <span>Mountains</span>
+    </div>
+
+    <div class="filter <%= listing.category === 'castles' ? 'active' : '' %>" data-category="castles">
+      <i class="fa-solid fa-chess-rook"></i>
+      <span>Castles</span>
+    </div>
+
+    <div class="filter <%= listing.category === 'beaches' ? 'active' : '' %>" data-category="beaches">
+      <i class="fa-solid fa-umbrella-beach"></i>
+      <span>Beaches</span>
+    </div>
+
+    <div class="filter <%= listing.category === 'farms' ? 'active' : '' %>" data-category="farms">
+      <i class="fa-solid fa-tractor"></i>
+      <span>Farms</span>
+    </div>
+
+    <div class="filter <%= listing.category === 'camping' ? 'active' : '' %>" data-category="camping">
+      <i class="fa-solid fa-campground"></i>
+      <span>Camping</span>
+    </div>
+
+    <div class="filter <%= listing.category === 'arctic' ? 'active' : '' %>" data-category="arctic">
+      <i class="fa-solid fa-snowflake"></i>
+      <span>Arctic</span>
+    </div>
+
+    <div class="filter <%= listing.category === 'luxury' ? 'active' : '' %>" data-category="luxury">
+      <i class="fa-solid fa-gem"></i>
+      <span>Luxury</span>
+    </div>
+
+    <div class="filter <%= listing.category === 'nature' ? 'active' : '' %>" data-category="nature">
+      <i class="fa-solid fa-tree"></i>
+      <span>Nature</span>
+    </div>
+
+    <div class="filter <%= listing.category === 'lake' ? 'active' : '' %>" data-category="lake">
+      <i class="fa-solid fa-water"></i>
+      <span>Lake</span>
+    </div>
+
+  </div>
+
+  <div class="invalid-feedback d-block">
+    Please select a category
+  </div>
+</div>

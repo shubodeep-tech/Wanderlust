@@ -1,0 +1,35 @@
+<% layout("layouts/boilerplate") %>
+
+<h3 class="mb-4">Your Wishlist ❤️</h3>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+
+  <% if (listings.length === 0) { %>
+    <p class="text-center">No items in wishlist yet </p>
+  <% } %>
+
+  <% listings.forEach(listing => { %>
+
+    <div class="col">
+      <a href="/listings/<%= listing._id %>" class="listing-link">
+
+        <div class="card listing-card h-100">
+
+          <img
+            src="<%= listing.image.url %>"
+            class="card-img-top"
+          />
+
+          <div class="card-body">
+            <strong><%= listing.title %></strong><br>
+            ₹ <%= listing.price.toLocaleString("en-IN") %> / night
+          </div>
+
+        </div>
+
+      </a>
+    </div>
+
+  <% }) %>
+
+</div>

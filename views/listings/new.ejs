@@ -1,0 +1,207 @@
+<% layout("layouts/boilerplate") %>
+
+
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+
+      <h3 class="mb-4 text-center">Create a New Listing</h3>
+
+      <form 
+        method="POST" 
+        action="/listings" 
+        enctype="multipart/form-data"
+        novalidate 
+        class="needs-validation"
+      >
+
+        <!----> TITLE -->
+        <div class="mb-3">
+          <label class="form-label">Title</label>
+          <input
+            id="title"
+            name="listing[title]"
+            type="text"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          <textarea
+            id="description"
+            name="listing[description]"
+            class="form-control"
+            rows="3"
+            required
+          ></textarea>
+        </div>
+
+        <!-- AI BUTTON -->
+         <button type="button" id="generateBtn" class="btn btn-dark">
+          ✨ Generate Description
+      </button>
+        
+
+        <!-- IMAGE -->
+        <div class="mb-3">
+          <label class="form-label">Upload Image</label>
+          <input type="file" name="listing[image]" class="form-control" />
+        </div>
+
+        <!-- PRICE + COUNTRY -->
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Price</label>
+            <input name="listing[price]" type="number" class="form-control" required />
+          </div>
+
+          <div class="col-md-8 mb-3">
+            <label class="form-label">Country</label>
+            <input name="listing[country]" type="text" class="form-control" required />
+          </div>
+        </div>
+
+        <!-- LOCATION -->
+        <div class="mb-3">
+          <label class="form-label">Location</label>
+          <input
+            id="location"
+            name="listing[location]"
+            type="text"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <!-- CATEGORY -->
+        <div class="mb-3">
+          <label class="form-label">Category</label>
+
+          <!-- Hidden Input -->
+          <input id="category" name="listing[category]" type="hidden" required />
+
+          <div class="filters-bar">
+
+            <div class="filter" data-category="trending">
+              <i class="fa-solid fa-fire"></i>
+              Trending
+            </div>
+
+            <div class="filter" data-category="mountains">
+              <i class="fa-solid fa-mountain"></i>
+              Mountains
+            </div>
+
+            <div class="filter" data-category="beaches">
+              <i class="fa-solid fa-umbrella-beach"></i>
+              Beaches
+            </div>
+
+            <div class="filter" data-category="iconic_cities">
+              <i class="fa-solid fa-city"></i>
+              Cities
+            </div>
+
+            <div class="filter" data-category="rooms">
+              <i class="fa-solid fa-bed"></i>
+              Rooms
+            </div>
+
+            <div class="filter" data-category="farms">
+              <i class="fa-solid fa-tractor"></i>
+              Farms
+            </div>
+
+            <div class="filter" data-category="camping">
+              <i class="fa-solid fa-campground"></i>
+              Camping
+            </div>
+
+            <div class="filter" data-category="castles">
+              <i class="fa-solid fa-chess-rook"></i>
+              Castles
+            </div>
+
+            <div class="filter" data-category="arctic">
+              <i class="fa-solid fa-snowflake"></i>
+              Arctic
+            </div>
+
+          </div>
+
+          <div class="invalid-feedback d-block">
+            Please select a category
+          </div>
+        </div>
+
+        <!-- SUBMIT -->
+        <button class="btn btn-dark w-100">Add Listing</button>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORY SCRIPT -->
+<script>
+const filters = document.querySelectorAll(".filter");
+const input = document.getElementById("category");
+
+filters.forEach(f => {
+  f.addEventListener("click", () => {
+    filters.forEach(el => el.classList.remove("active"));
+    f.classList.add("active");
+    input.value = f.dataset.category;
+  });
+});
+</script>
+
+<!-- AI DESCRIPTION -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const btn = document.getElementById("generateBtn");
+
+  btn.addEventListener("click", async () => {
+
+    const titleInput = document.querySelector('input[name="listing[title]"]');
+    const descInput = document.getElementById("description"); 
+
+    const title = titleInput.value;
+
+    if (!title) {
+      alert("Enter title first!");
+      return;
+    }
+
+    btn.innerText = "Generating...";
+    btn.disabled = true;   
+
+    try {
+      const res = await fetch("/ai/generate-description", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ title })
+      });
+
+      const data = await res.json();
+
+      descInput.value = data.description;
+
+    } catch (err) {
+      console.error(err);
+      alert("AI failed");
+    }
+
+    btn.innerText = "✨ Generate Description";
+    btn.disabled = false;  
+  });
+
+});
+</script>

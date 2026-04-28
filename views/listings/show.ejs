@@ -1,0 +1,91 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="show-wrapper">
+
+  <h2 class="show-title"><%= listing.title %></h2>
+
+
+  <div class="position-relative">
+    <img src="<%= listing.image.url %>" class="show-img" />
+
+    <% if (currUser) { %>
+      <form action="/listings/<%= listing._id %>/wishlist" method="POST">
+        <button class="wishlist-btn">❤️</button>
+      </form>
+    <% } %>
+  </div>
+
+
+  <div class="show-info mt-3">
+    <p class="show-location">
+      <%= listing.location %>, <%= listing.country %>
+    </p>
+
+    <p class="show-price">
+      ₹ <%= listing.price.toLocaleString("en-IN") %> / night
+    </p>
+
+    <p class="show-desc"><%= listing.description %></p>
+  </div>
+
+
+
+  <!-- OWNER ACTIONS -->
+  <% if (currUser && listing.owner._id.equals(currUser._id)) { %>
+    <div class="btns">
+      <a href="/listings/<%= listing._id %>/edit" class="btn btn-danger">Edit</a>
+
+      <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
+        <button class="btn btn-dark">Delete</button>
+      </form>
+    </div>
+  <% } %>
+
+  <% if (currUser) { %>
+  <form action="/listings/<%= listing._id %>/wishlist" method="POST">
+    <button class="btn btn-outline-danger mt-2">
+      ❤️ Add to Wishlist
+    </button>
+  </form>
+<% } %>
+
+  <div class="divider"></div>
+
+
+  <div class="content-wrapper">
+
+    <% if (currUser) { %>
+      <h4>Leave a review</h4>
+
+      <form action="/listings/<%= listing._id %>/reviews" method="POST">
+        <input type="range" min="1" max="5" name="review[rating]" />
+        <textarea name="review[comment]" class="form-control mt-2"></textarea>
+        <button class="btn btn-dark mt-2">Submit</button>
+      </form>
+
+      <div class="divider"></div>
+    <% } %>
+
+    <h4>All Reviews</h4>
+
+    <% for (let review of listing.reviews) { %>
+      <div class="card review-card mb-3">
+        <div class="card-body">
+          <h6>@<%= review.author?.username || "Anonymous" %></h6>
+          <p><%= review.comment %></p>
+          <small><%= review.rating %> stars</small>
+        </div>
+      </div>
+    <% } %>
+
+  </div>
+
+
+  <div class="map-wrapper">
+    <h4>Where you'll be</h4>
+    <div id="map"></div>
+  </div>
+
+</div>
+
+<script src="/js/map.js"></script>
