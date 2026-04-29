@@ -7,7 +7,7 @@ const wrapAsync = require("../utils/wrapAsync");
 
 const rateLimit = require("express-rate-limit");
 
-// 🔥 Rate limiter
+
 const aiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,

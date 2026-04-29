@@ -11,9 +11,6 @@ const {
 const reviewController = require("../controllers/reviews");
 const review = require("../models/review.js");
 
-
-
-// CREATE REVIEW
 router.post(
   "/",
   isLoggedIn,
@@ -21,7 +18,7 @@ router.post(
   wrapAsync(reviewController.createReview)
 );
 
-// DELETE REVIEW
+
 router.delete(
   "/:reviewId",
   isLoggedIn,

@@ -13,11 +13,11 @@ async function parseQuery(query, Listing) {
   if (query.includes("lake"))     filters.category = "lake";
   if (query.includes("city") || query.includes("urban")) filters.category = "iconic_cities";
 
-  // PRICE
+ 
   const priceMatch = query.match(/under (\d+)/);
   if (priceMatch) filters.price = { $lte: Number(priceMatch[1]) };
 
-  // LOCATION — return plain string, NOT $regex object ✅
+
   const words = query.split(" ");
   for (let word of words) {
     if (word.length < 3) continue;
@@ -25,7 +25,7 @@ async function parseQuery(query, Listing) {
       location: { $regex: new RegExp(word, "i") },
     });
     if (exists) {
-      filters.location = word; // ← plain string only
+      filters.location = word; 
       break;
     }
   }

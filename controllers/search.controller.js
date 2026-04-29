@@ -16,7 +16,7 @@ module.exports.searchListings = async (req, res) => {
 
     console.log("Parsed Filters:", filters);
 
-    // ✅ Validate category before using it
+    
     if (filters.category && !VALID_CATEGORIES.includes(filters.category)) {
       delete filters.category;
     }

@@ -25,26 +25,25 @@ mongoose.set("strictQuery", true);
 
 mongoose
   .connect(dbUrl)
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.log("❌ DB Error:", err));
+  .then(() => console.log(" MongoDB Connected"))
+  .catch((err) => console.log(" DB Error:", err));
 
-// ================= VIEW ENGINE =================
+// VIEW ENGINE 
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// ================= DEBUG =================
+// DEBUG
 console.log("STATIC PATH:", path.join(__dirname, "public"));
 
-// ================= 🔥 STATIC FILES (MOST IMPORTANT FIX) =================
-app.use(express.static(path.join(__dirname, "public")));  // ✅ REQUIRED
+// STATIC FILES 
+app.use(express.static(path.join(__dirname, "public")));  
 
-// ================= MIDDLEWARE =================
+// MIDDLEWARE 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
 
-// ================= SESSION =================
 const store = MongoStore.create({
   mongoUrl: dbUrl,
   touchAfter: 24 * 3600,
@@ -65,7 +64,7 @@ app.use(
 
 app.use(flash());
 
-// ================= PASSPORT =================
+//PASSPORT 
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -73,7 +72,7 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// ================= GLOBAL LOCALS =================
+//  GLOBAL LOCALS 
 app.use((req, res, next) => {
   res.locals.currUser = req.user || null;
   res.locals.success = req.flash("success") || [];
@@ -87,7 +86,7 @@ app.get("/", (req, res) => {
   res.redirect("/listings");
 });
 
-// ================= ROUTES =================
+// ROUTES
 const listingRoutes = require("./routes/listings");
 const reviewRoutes = require("./routes/reviews");
 const userRoutes = require("./routes/user");
@@ -100,7 +99,7 @@ app.use("/", userRoutes);
 app.use("/ai", aiRoutes);
 app.use("/search", searchRoutes);
 
-// ================= ERROR =================
+//  ERROR
 app.use((req, res, next) => {
   next(new ExpressError(404, "Page Not Found"));
 });
@@ -111,7 +110,7 @@ app.use((err, req, res, next) => {
   res.status(err.statusCode || 500).send(err.message || "Server Error");
 });
 
-// ================= SERVER =================
+//  SERVER
 const PORT = process.env.PORT || 8060;
 
 app.listen(PORT, () => {

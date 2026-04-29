@@ -2,7 +2,7 @@
 
 <div class="show-wrapper">
 
-  <!-- TITLE -->
+  
   <h2 class="show-title"><%= listing.title %></h2>
 
   
@@ -10,7 +10,6 @@
     Hosted by <strong><%= listing.owner?.username || "Unknown" %></strong>
   </p>
 
-  <!-- IMAGE -->
   <div class="position-relative">
     <img 
       src="<%= listing.image?.url || '/default.jpg' %>" 
@@ -24,7 +23,7 @@
     <% } %>
   </div>
 
-  <!-- INFO -->
+  
   <div class="show-info">
 
     <p class="show-location">
@@ -38,7 +37,6 @@
     <p class="show-desc"><%= listing.description %></p>
   </div>
 
-  <!-- OWNER ACTIONS -->
   <% if (currUser && listing.owner && listing.owner._id.equals(currUser._id)) { %>
     <div class="btns">
       <a href="/listings/<%= listing._id %>/edit" class="btn btn-danger">Edit</a>
@@ -49,7 +47,7 @@
     </div>
   <% } %>
 
-  <!-- REVIEW FORM -->
+
   <% if (currUser) { %>
     <hr/>
     <h4>Leave a review</h4>
@@ -61,7 +59,7 @@
     </form>
   <% } %>
 
-  <!-- REVIEWS -->
+  
   <% if (listing.reviews && listing.reviews.length > 0) { %>
     <hr/>
     <h4>All Reviews</h4>
@@ -77,7 +75,7 @@
     <% }) %>
   <% } %>
 
-  <!-- MAP -->
+ 
   <hr/>
   <h4>Where you'll be</h4>
   <div id="map"></div>

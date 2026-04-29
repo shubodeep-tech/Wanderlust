@@ -6,19 +6,18 @@ const { parseQuery } = require("../services/queryParser.service");
 const mapToken = process.env.MAPBOX_TOKEN;
 const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
-// ================= INDEX (SEARCH + ALL) =================
 
 
 const index = async (req, res) => {
   const listings = await Listing.find({});
   res.render("listings/index", { listings });
 };
-// ================= NEW FORM =================
+//  NEW FORM 
 const renderNewForm = (req, res) => {
   res.render("listings/new.ejs", { mapToken });
 };
 
-// ================= SHOW =================
+// SHOW
 const showListing = async (req, res) => {
   const { id } = req.params;
 
@@ -35,7 +34,7 @@ const showListing = async (req, res) => {
   res.render("listings/show", { listing, mapToken });
 };
 
-// ================= CREATE =================
+// CREATE 
 const createListing = async (req, res) => {
   try {
     const geoResponse = await geocodingClient
@@ -78,7 +77,7 @@ const createListing = async (req, res) => {
   }
 };
 
-// ================= EDIT FORM =================
+//EDIT FORM
 const renderEditForm = async (req, res) => {
   const { id } = req.params;
 
@@ -92,7 +91,7 @@ const renderEditForm = async (req, res) => {
   res.render("listings/edit.ejs", { listing, originalImageUrl });
 };
 
-// ================= UPDATE =================
+//  UPDATE 
 const updateListing = async (req, res) => {
   const { id } = req.params;
 
@@ -116,7 +115,7 @@ const listing = await Listing.findByIdAndUpdate(
   res.redirect(`/listings/${id}`);
 };
 
-// ================= DELETE =================
+// DELETE
 const destroyListing = async (req, res) => {
   const { id } = req.params;
 

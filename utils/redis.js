@@ -18,7 +18,7 @@ redisClient.on("error", (err) => console.log("Redis Error", err));
 module.exports = redisClient;
 */
 
-// ── Stub so imports don't crash ───────────────────────
+
 module.exports = {
   get:      async () => null,
   set:      async () => null,

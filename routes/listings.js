@@ -27,10 +27,10 @@ router
     wrapAsync(listingController.createListing)
   );
 
-// NEW
+
 router.get("/new", isLoggedIn, listingController.renderNewForm);
 
-// WISHLIST PAGE
+
 router.get("/wishlist", isLoggedIn, async (req, res) => {
   const user = await User.findById(req.user._id).populate("wishlist");
 
@@ -47,7 +47,7 @@ router.get(
   wrapAsync(listingController.renderEditForm)
 );
 
-// WISHLIST ADD 
+
 router.post("/:id/wishlist", isLoggedIn, async (req, res) => {
   const listing = await Listing.findById(req.params.id);
   const user = await User.findById(req.user._id);

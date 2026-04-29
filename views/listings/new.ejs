@@ -15,7 +15,6 @@
         class="needs-validation"
       >
 
-        <!-- TITLE -->
         <div class="mb-3">
           <label class="form-label">Title</label>
           <input
@@ -27,7 +26,7 @@
           />
         </div>
 
-        <!-- DESCRIPTION -->
+        
         <div class="mb-3">
           <label class="form-label">Description</label>
           <textarea
@@ -45,13 +44,13 @@
       </button>
         
 
-        <!-- IMAGE -->
+       
         <div class="mb-3">
           <label class="form-label">Upload Image</label>
           <input type="file" name="listing[image]" class="form-control" />
         </div>
 
-        <!-- PRICE + COUNTRY -->
+        
         <div class="row">
           <div class="col-md-4 mb-3">
             <label class="form-label">Price</label>
@@ -64,7 +63,7 @@
           </div>
         </div>
 
-        <!-- LOCATION -->
+       
         <div class="mb-3">
           <label class="form-label">Location</label>
           <input
@@ -76,11 +75,11 @@
           />
         </div>
 
-        <!-- CATEGORY -->
+       
         <div class="mb-3">
           <label class="form-label">Category</label>
 
-          <!-- Hidden Input -->
+          
           <input id="category" name="listing[category]" type="hidden" required />
 
           <div class="filters-bar">
@@ -153,7 +152,6 @@
   </div>
 </div>
 
-<!-- CATEGORY SCRIPT -->
 <script>
 const filters = document.querySelectorAll(".filter");
 const input = document.getElementById("category");
