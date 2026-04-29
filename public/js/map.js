@@ -9,14 +9,13 @@ document.addEventListener("DOMContentLoaded", () => {
     console.warn("listingData missing");
     return;
   }
-
-  // ✅ ADD DEBUG HERE
+  
   console.log("Listing Data:", listingData);
   console.log("Coordinates:", listingData?.geometry?.coordinates);
 
   mapboxgl.accessToken = mapToken;
 
-  let coords = [77.2090, 28.6139]; // fallback (Delhi)
+  let coords = [77.2090, 28.6139]; 
 
   if (
     Array.isArray(listingData?.geometry?.coordinates) &&

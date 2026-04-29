@@ -1,63 +1,57 @@
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
+require("dotenv").config();
 
 const express = require("express");
-const app = express();
-
 const mongoose = require("mongoose");
-const MongoStore = require("connect-mongo").default;
-mongoose.set("strictQuery", true);
-
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-
 const session = require("express-session");
 const flash = require("connect-flash");
-
+const MongoStore = require("connect-mongo").default;
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
 const ExpressError = require("./utils/ExpressError");
 const User = require("./models/user");
-const aiRoutes = require("./routes/ai");
 
-// ================= DATABASE =================
+const app = express();
+
+// ================= DB CONNECT =================
+const dbUrl = process.env.ATLASDB_URL;
+
+mongoose.set("strictQuery", true);
+
 mongoose
-  .connect(process.env.MONGO_URL)
-  .then(() => console.log("MongoDB Connected"))
-  .catch(console.log);
+  .connect(dbUrl)
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch((err) => console.log("❌ DB Error:", err));
 
 // ================= VIEW ENGINE =================
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+// ================= DEBUG =================
+console.log("STATIC PATH:", path.join(__dirname, "public"));
+
+// ================= 🔥 STATIC FILES (MOST IMPORTANT FIX) =================
+app.use(express.static(path.join(__dirname, "public")));  // ✅ REQUIRED
+
 // ================= MIDDLEWARE =================
 app.use(express.urlencoded({ extended: true }));
-app.use(methodOverride("_method"));
-app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
+app.use(methodOverride("_method"));
 
-// ✅ FIXED MongoStore
+// ================= SESSION =================
 const store = MongoStore.create({
-  mongoUrl: process.env.MONGO_URL,
-  crypto: {  // ✅ fixed
-    secret: process.env.SESSION_SECRET,
-  },
+  mongoUrl: dbUrl,
   touchAfter: 24 * 3600,
-});
-
-
-store.on("error", (err) => {
-  console.log("ERROR in MONGO SESSION STORE", err);
 });
 
 app.use(
   session({
-    store: store,
-    secret: process.env.SESSION_SECRET || "secret",
+    store,
+    secret: process.env.SESSION_SECRET || "fallbacksecret",
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -77,39 +71,47 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// ================= LOCALS =================
+// ================= GLOBAL LOCALS =================
 app.use((req, res, next) => {
   res.locals.currUser = req.user || null;
-  res.locals.success = req.flash("success");
-  res.locals.error = req.flash("error");
-  res.locals.query = "";
+  res.locals.success = req.flash("success") || [];
+  res.locals.error = req.flash("error") || [];
+  res.locals.query = req.query?.q || "";
   next();
+});
+
+
+app.get("/", (req, res) => {
+  res.redirect("/listings");
 });
 
 // ================= ROUTES =================
 const listingRoutes = require("./routes/listings");
 const reviewRoutes = require("./routes/reviews");
 const userRoutes = require("./routes/user");
+const aiRoutes = require("./routes/ai");
 const searchRoutes = require("./routes/search.routes");
 
 app.use("/listings", listingRoutes);
 app.use("/listings/:id/reviews", reviewRoutes);
 app.use("/", userRoutes);
 app.use("/ai", aiRoutes);
+app.use("/search", searchRoutes);
 
-// ================= ERROR HANDLING =================
+// ================= ERROR =================
 app.use((req, res, next) => {
   next(new ExpressError(404, "Page Not Found"));
 });
 
 app.use((err, req, res, next) => {
-  const { statusCode = 500 } = err;
-  res.status(statusCode).render("error", { err });
+  console.error(" ERROR:", err.message);
+  console.error(err.stack);
+  res.status(err.statusCode || 500).send(err.message || "Server Error");
 });
 
 // ================= SERVER =================
-const PORT = process.env.PORT || 8060;   
+const PORT = process.env.PORT || 8060;
 
 app.listen(PORT, () => {
-  console.log("Serving on port", PORT);
+  console.log(` Server running on port ${PORT}`);
 });

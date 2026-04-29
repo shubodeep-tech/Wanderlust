@@ -4,11 +4,10 @@ let embedderPromise = null;
 
 async function getEmbedder() {
   if (!embedderPromise) {
-    embedderPromise = pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2")
-      .then((m) => {
-        console.log(" Embedding model loaded");
-        return m;
-      });
+    embedderPromise = pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2").then((m) => {
+      console.log(" Embedding model loaded");
+      return m;
+    });
   }
   return embedderPromise;
 }

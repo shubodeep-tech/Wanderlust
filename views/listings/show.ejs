@@ -2,10 +2,20 @@
 
 <div class="show-wrapper">
 
+  <!-- TITLE -->
   <h2 class="show-title"><%= listing.title %></h2>
 
+  
+  <p class="show-owner">
+    Hosted by <strong><%= listing.owner?.username || "Unknown" %></strong>
+  </p>
+
+  <!-- IMAGE -->
   <div class="position-relative">
-    <img src="<%= listing.image.url %>" class="show-img" />
+    <img 
+      src="<%= listing.image?.url || '/default.jpg' %>" 
+      class="show-img"
+    />
 
     <% if (currUser) { %>
       <form action="/listings/<%= listing._id %>/wishlist" method="POST">
@@ -14,23 +24,22 @@
     <% } %>
   </div>
 
+  <!-- INFO -->
+  <div class="show-info">
 
-  <div class="show-info mt-3">
     <p class="show-location">
-      <%= listing.location %>, <%= listing.country %>
+      📍 <%= listing.location %>, <%= listing.country %>
     </p>
 
     <p class="show-price">
-      ₹ <%= listing.price.toLocaleString("en-IN") %> / night
+      ₹ <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %> / night
     </p>
 
     <p class="show-desc"><%= listing.description %></p>
   </div>
 
-
-
   <!-- OWNER ACTIONS -->
-  <% if (currUser && listing.owner._id.equals(currUser._id)) { %>
+  <% if (currUser && listing.owner && listing.owner._id.equals(currUser._id)) { %>
     <div class="btns">
       <a href="/listings/<%= listing._id %>/edit" class="btn btn-danger">Edit</a>
 
@@ -40,62 +49,44 @@
     </div>
   <% } %>
 
+  <!-- REVIEW FORM -->
   <% if (currUser) { %>
-  <form action="/listings/<%= listing._id %>/wishlist" method="POST">
-    <button class="btn btn-outline-danger mt-2">
-      ❤️ Add to Wishlist
-    </button>
-  </form>
-<% } %>
+    <hr/>
+    <h4>Leave a review</h4>
 
-  <div class="divider"></div>
+    <form action="/listings/<%= listing._id %>/reviews" method="POST">
+      <input type="range" min="1" max="5" name="review[rating]" />
+      <textarea name="review[comment]" class="form-control mt-2"></textarea>
+      <button class="btn btn-dark mt-2">Submit</button>
+    </form>
+  <% } %>
 
-
-  <div class="content-wrapper">
-
-    <% if (currUser) { %>
-      <hr />
-      <h4>Leave a review</h4>
-
-      <form 
-      action="/listings/<%= listing._id %>/reviews" 
-      method="POST"
-      novalidate
-      class="needs-validation">
-        <input type="range" min="1" max="5" name="review[rating]" />
-        <textarea name="review[comment]" class="form-control mt-2"></textarea>
-        <button class="btn btn-dark mt-2">Submit</button>
-      </form>
-
-      <div class="divider"></div>
-    <% } %>
-    <% if(listing.reviews.length > 0 ) {  %>
-
+  <!-- REVIEWS -->
+  <% if (listing.reviews && listing.reviews.length > 0) { %>
+    <hr/>
     <h4>All Reviews</h4>
 
-    <% for (let review of listing.reviews) { %>
+    <% listing.reviews.forEach(review => { %>
       <div class="card review-card mb-3">
         <div class="card-body">
           <h6>@<%= review.author?.username || "Anonymous" %></h6>
           <p><%= review.comment %></p>
-          <small><%= review.rating %> stars</small>
+          <small>⭐ <%= review.rating %> / 5</small>
         </div>
       </div>
-    <% } %>
-    <% } %>
-  </div>
- <br>
- <hr/>
-  <div class="col-14 mb-3">
-    <h4>Where you'll be</h4>
-    <div id="map"></div>
-  </div>
+    <% }) %>
+  <% } %>
+
+  <!-- MAP -->
+  <hr/>
+  <h4>Where you'll be</h4>
+  <div id="map"></div>
 
 </div>
+
 <script>
   const mapToken = "<%= mapToken %>";
   const listingData = <%- JSON.stringify(listing) %>;
 </script>
 
 <script src="/js/map.js"></script>
-

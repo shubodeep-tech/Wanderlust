@@ -1,42 +1,31 @@
 async function parseQuery(query, Listing) {
   query = query.toLowerCase();
-
   let filters = {};
 
   // CATEGORY
-  if (query.includes("villa")) filters.category = "villa";
-  if (query.includes("hotel")) filters.category = "hotel";
+  if (query.includes("mountain")) filters.category = "mountains";
+  if (query.includes("beach"))    filters.category = "beaches";
+  if (query.includes("luxury"))   filters.category = "luxury";
+  if (query.includes("castle"))   filters.category = "castles";
+  if (query.includes("farm"))     filters.category = "farms";
+  if (query.includes("camp"))     filters.category = "camping";
+  if (query.includes("arctic"))   filters.category = "arctic";
+  if (query.includes("lake"))     filters.category = "lake";
+  if (query.includes("city") || query.includes("urban")) filters.category = "iconic_cities";
 
   // PRICE
   const priceMatch = query.match(/under (\d+)/);
-  if (priceMatch) {
-    filters.price = { $lte: Number(priceMatch[1]) };
-  }
+  if (priceMatch) filters.price = { $lte: Number(priceMatch[1]) };
 
-  if (query.includes("cheap") || query.includes("lowest")) {
-    filters.sortPrice = 1;
-  }
-
-  if (query.includes("expensive") || query.includes("luxury")) {
-    filters.sortPrice = -1;
-  }
-
-  // RATING
-  const ratingMatch = query.match(/(\d) star/);
-  if (ratingMatch) {
-    filters.rating = { $gte: Number(ratingMatch[1]) };
-  }
-
- 
+  // LOCATION — return plain string, NOT $regex object ✅
   const words = query.split(" ");
-
   for (let word of words) {
+    if (word.length < 3) continue;
     const exists = await Listing.findOne({
-      location: { $regex: new RegExp(`^${word}$`, "i") }
+      location: { $regex: new RegExp(word, "i") },
     });
-
     if (exists) {
-      filters.location = word;
+      filters.location = word; // ← plain string only
       break;
     }
   }

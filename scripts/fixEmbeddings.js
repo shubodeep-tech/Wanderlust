@@ -6,7 +6,7 @@ const { getEmbedding } = require("../services/embedding.service");
 
 async function fixEmbeddings() {
   try {
-    await mongoose.connect(process.env.MONGO_URL);
+    await mongoose.connect(process.env.ATLASDB_URL);
     console.log("MongoDB Connected");
 
     console.log("DB NAME:", mongoose.connection.name);

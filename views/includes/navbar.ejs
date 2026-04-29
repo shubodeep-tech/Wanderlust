@@ -28,14 +28,14 @@
     <form
   class="search-form mx-auto my-2 my-md-0"
   role="search"
-  action="/listings"
+  action="/search"
   method="GET"
 >
   <input
     type="text"
-    name="q"
+    name="query"
     placeholder="Search stays"
-    value="<%= query || '' %>"
+    value="<%= typeof query !== 'undefined' ? query : '' %>"
     class="search-input"
   />
 
@@ -50,18 +50,18 @@
           List Your Property
         </a>
 
-        <% if (currUser) { %>
+        <% if (typeof currUser !== "undefined" && currUser) { %>
           <a class="nav-link me-2" href="/listings/wishlist">
             ❤️ Wishlist
           </a>
         <% } %>
 
-        <% if (!currUser) { %>
-          <a class="nav-link" href="/signup">Signup</a>
-          <a class="nav-link" href="/login">Login</a>
-        <% } else { %>
-          <a class="nav-link" href="/logout">Logout</a>
-        <% } %>
+       <% if (typeof currUser !== "undefined" && currUser) { %>
+        <a class="nav-link" href="/logout">Logout</a>
+     <% } else { %>
+        <a class="nav-link" href="/signup">Signup</a>
+        <a class="nav-link" href="/login">Login</a>
+     <% } %>
 
       </div>
     </div>

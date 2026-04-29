@@ -1,92 +1,53 @@
 <% layout("layouts/boilerplate") %>
 
+<!-- FILTER BAR -->
 <div class="filters-bar mt-3 px-3">
+  <% const categories = [
+    ["trending","fa-fire","Trending"],
+    ["mountains","fa-mountain","Mountains"],
+    ["beaches","fa-umbrella-beach","Beaches"],
+    ["iconic_cities","fa-city","Cities"],
+    ["rooms","fa-bed","Rooms"],
+    ["farms","fa-tractor","Farms"],
+    ["camping","fa-campground","Camping"],
+    ["castles","fa-chess-rook","Castles"],
+    ["arctic","fa-snowflake","Arctic"],
+    ["luxury","fa-gem","Luxury"],
+    ["nature","fa-tree","Nature"],
+    ["lake","fa-water","Lake"]
+  ]; %>
 
-  <div class="filter" data-category="trending">
-    <i class="fa-solid fa-fire"></i>
-    <p>Trending</p>
-  </div>
-
-  <div class="filter" data-category="mountains">
-    <i class="fa-solid fa-mountain"></i>
-    <p>Mountains</p>
-  </div>
-
-  <div class="filter" data-category="beaches">
-    <i class="fa-solid fa-umbrella-beach"></i>
-    <p>Beaches</p>
-  </div>
-
-  <div class="filter" data-category="iconic_cities">
-    <i class="fa-solid fa-city"></i>
-    <p>Cities</p>
-  </div>
-
-  <div class="filter" data-category="rooms">
-    <i class="fa-solid fa-bed"></i>
-    <p>Rooms</p>
-  </div>
-
-  <div class="filter" data-category="farms">
-    <i class="fa-solid fa-tractor"></i>
-    <p>Farms</p>
-  </div>
-
-  <div class="filter" data-category="camping">
-    <i class="fa-solid fa-campground"></i>
-    <p>Camping</p>
-  </div>
-
-  <div class="filter" data-category="castles">
-    <i class="fa-solid fa-chess-rook"></i>
-    <p>Castles</p>
-  </div>
-
-  <div class="filter" data-category="arctic">
-    <i class="fa-solid fa-snowflake"></i>
-    <p>Arctic</p>
-  </div>
-
-  <div class="filter" data-category="luxury">
-    <i class="fa-solid fa-gem"></i>
-    <p>Luxury</p>
-  </div>
-
-  <div class="filter" data-category="nature">
-    <i class="fa-solid fa-tree"></i>
-    <p>Nature</p>
-  </div>
-
-  <div class="filter" data-category="lake">
-    <i class="fa-solid fa-water"></i>
-    <p>Lake</p>
-  </div>
-
+  <% categories.forEach(cat => { %>
+    <div class="filter" data-category="<%= cat[0] %>">
+      <i class="fa-solid <%= cat[1] %>"></i>
+      <p><%= cat[2] %></p>
+    </div>
+  <% }) %>
 </div>
 
-<% if (query) { %>
-  <div class="active-search px-3 mt-2">
-    <p>
-      Showing results for:
-      <strong><%= query %></strong>
-    </p>
-  </div>
-<% } %>
-<h3 class="mb-4">All Listings</h3>
+<h3 class="mb-4 px-3">All Listings</h3>
 
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+<!-- LISTINGS -->
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 px-3">
 
-  <% for (let listing of allListings) { %>
+  <% if (listings.length === 0) { %>
+    <p>No listings found</p>
+  <% } %>
+
+  <% listings.forEach(listing => { %>
+
     <div class="col">
-
       <div class="card listing-card h-100">
 
         <!-- IMAGE -->
         <a href="/listings/<%= listing._id %>" class="listing-link">
-          <img src="<%= listing.image.url %>" class="card-img-top" />
+          <img 
+            src="<%= listing.image?.url || '/default.jpg' %>" 
+            class="card-img-top"
+          />
         </a>
 
-       
+        <!-- WISHLIST -->
         <% if (currUser) { %>
           <form action="/listings/<%= listing._id %>/wishlist" method="POST">
             <button class="wishlist-btn">❤️</button>
@@ -95,23 +56,22 @@
 
         <!-- BODY -->
         <div class="card-body">
-  <strong><%= listing.title %></strong><br>
+          <strong><%= listing.title %></strong><br>
 
-  <span class="price" data-price="<%= listing.price %>">
-    ₹ <%= listing.price.toLocaleString("en-IN") %>
-  </span> / night
-</div>
+          <span class="price">
+            ₹ <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %>
+          </span> / night
+        </div>
 
       </div>
-
     </div>
-  <% } %>
 
+  <% }) %>
 
 </div>
 
 <script>
-  document.querySelectorAll(".filter").forEach(el => {
+document.querySelectorAll(".filter").forEach(el => {
   el.addEventListener("click", () => {
     const category = el.dataset.category;
     window.location.href = `/listings?category=${category}`;
