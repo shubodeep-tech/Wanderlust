@@ -19,7 +19,7 @@ const User = require("./models/user");
 const app = express();
 
 // ================= DB CONNECT =================
-const dbUrl = process.env.ATLASDB_URL;
+const dbUrl = process.env.MONGO_URI;
 
 mongoose.set("strictQuery", true);
 

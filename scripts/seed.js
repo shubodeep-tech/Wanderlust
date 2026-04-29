@@ -140,8 +140,8 @@ const sampleListings = [
 
 async function seed() {
   try {
-    await mongoose.connect(process.env.ATLASDB_URL);
-    console.log("✅ Connected");
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("Connected");
 
     await Listing.deleteMany({});
     console.log("🗑️  Cleared old listings");
@@ -151,13 +151,13 @@ async function seed() {
       const text = `${listing.title} ${listing.description} ${listing.location} ${listing.category}`;
       listing.embedding = await getEmbedding(text);
       await listing.save();
-      console.log("✅ Seeded:", listing.title);
+      console.log(" Seeded:", listing.title);
     }
 
     console.log("\n🎉 All listings seeded with embeddings!");
     process.exit(0);
   } catch (err) {
-    console.error("❌ Error:", err);
+    console.error(" Error:", err);
     process.exit(1);
   }
 }

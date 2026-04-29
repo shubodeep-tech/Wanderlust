@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const initData = require("./data.js");
 const Listing = require("../models/listing.js");
 
-const dbUrl = process.env.ATLASDB_URL;
+const dbUrl = process.env.MONGO_URI;
 
 async function main() {
   await mongoose.connect(dbUrl);
