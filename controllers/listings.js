@@ -37,6 +37,17 @@ const showListing = async (req, res) => {
 // CREATE 
 const createListing = async (req, res) => {
   try {
+
+    if (!req.user) {
+      req.flash("error", "Login required");
+      return res.redirect("/login");
+    }
+
+    if (!req.body.listing.category) {
+      req.flash("error", "Select a category");
+      return res.redirect("/listings/new");
+    }
+
     const geoResponse = await geocodingClient
       .forwardGeocode({ query: req.body.listing.location, limit: 1 })
       .send();
@@ -48,17 +59,15 @@ const createListing = async (req, res) => {
 
     const newListing = new Listing(req.body.listing);
 
-    
     newListing.owner = req.user._id;
-
-    newListing.location = newListing.location.toLowerCase();
+    newListing.location = req.body.listing.location.trim().toLowerCase();
+    newListing.category = req.body.listing.category.toLowerCase();
     newListing.geometry = geoResponse.body.features[0].geometry;
 
-   
     newListing.image = {
       url: req.file
         ? req.file.path
-        : "https://images.unsplash.com/photo-1505691938895-1758d7feb511?q=80&w=1200",
+        : "https://images.unsplash.com/photo-1505691938895-1758d7feb511",
       filename: req.file ? req.file.filename : "default"
     };
 
@@ -67,7 +76,7 @@ const createListing = async (req, res) => {
 
     await newListing.save();
 
-    req.flash("success", "New Listing Created!");
+    req.flash("success", "Listing Created!");
     res.redirect(`/listings/${newListing._id}`);
 
   } catch (err) {
