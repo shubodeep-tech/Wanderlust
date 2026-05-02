@@ -28,7 +28,7 @@ router
   );
 
 
-router.get("/new", isLoggedIn, listingController.renderNewForm);
+
 
 
 router.get("/wishlist", isLoggedIn, async (req, res) => {

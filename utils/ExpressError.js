@@ -1,9 +1,7 @@
-class ExpressError extends Error {
-  constructor(statusCode, message) {
-    super();
-    this.statusCode = statusCode;
-    this.message = message;
-  }
+const { getEmbedding } = require("../services/embedding.service");
+
+async function generateEmbedding(text) {
+  return await getEmbedding(text);
 }
 
-module.exports = ExpressError;
+module.exports = generateEmbedding;

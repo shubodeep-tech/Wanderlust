@@ -1,15 +1,13 @@
 const { pipeline } = require("@xenova/transformers");
 
-let embedderPromise = null;
+let embedder = null;
 
 async function getEmbedder() {
-  if (!embedderPromise) {
-    embedderPromise = pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2").then((m) => {
-      console.log(" Embedding model loaded");
-      return m;
-    });
+  if (!embedder) {
+    embedder = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2");
+    console.log("Embedder ready");
   }
-  return embedderPromise;
+  return embedder;
 }
 
 async function getEmbedding(text) {

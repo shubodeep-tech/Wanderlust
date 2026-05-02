@@ -79,3 +79,14 @@
     Please select a category
   </div>
 </div>
+
+<script>
+  document.querySelectorAll(".filter").forEach(el => {
+  el.addEventListener("click", () => {
+    document.querySelectorAll(".filter").forEach(f => f.classList.remove("active"));
+    el.classList.add("active");
+
+    document.getElementById("category").value = el.dataset.category;
+  });
+});
+</script>

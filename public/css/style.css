@@ -17,7 +17,11 @@ body {
   padding: 0 1rem;
   flex: 1;
 }
-
+.login-box {
+  width: 450px;
+  margin: auto;
+  margin-top: 100px;
+}
 /* =========================
 NAVBAR
 ========================= */

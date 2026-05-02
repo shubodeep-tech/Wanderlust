@@ -8,7 +8,7 @@ module.exports.generateDesc = async (req, res) => {
 
     res.json({ description });
   } catch (err) {
-    console.error("❌ AI ERROR:", err);
+    console.error(" AI ERROR:", err);
     
 
   }

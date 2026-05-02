@@ -27,7 +27,7 @@ module.exports.searchListings = async (req, res) => {
     const pipeline = [
       {
         $vectorSearch: {
-          index: "listing_vector_index",
+          index: "vector_index",
           path: "embedding",
           queryVector: embedding,
           numCandidates: 150,

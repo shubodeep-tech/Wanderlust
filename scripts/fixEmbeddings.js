@@ -1,17 +1,12 @@
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
-
+require("dotenv").config();
 const mongoose = require("mongoose");
 const Listing = require("../models/listing");
 const { getEmbedding } = require("../services/embedding.service");
 
 async function fixEmbeddings() {
   try {
-    await mongoose.connect(process.env.ATLASDB_URL);
+    await mongoose.connect(process.env.MONGO_URI);
     console.log("MongoDB Connected");
-
-    console.log("DB NAME:", mongoose.connection.name);
 
     const listings = await Listing.find();
 
@@ -21,7 +16,7 @@ async function fixEmbeddings() {
       const embedding = await getEmbedding(text);
 
       if (!embedding || embedding.length === 0) {
-        console.log(" Failed:", l._id);
+        console.log("Failed:", l._id);
         continue;
       }
 
@@ -30,14 +25,14 @@ async function fixEmbeddings() {
         { $set: { embedding: embedding } }
       );
 
-      console.log(" Updated:", l._id);
+      console.log("Updated:", l._id);
     }
 
-    console.log(" All embeddings updated");
+    console.log("All embeddings updated");
     process.exit(0);
 
   } catch (err) {
-    console.error(" Error:", err);
+    console.error(err);
     process.exit(1);
   }
 }

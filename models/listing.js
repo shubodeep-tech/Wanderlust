@@ -63,11 +63,15 @@ const listingSchema = new Schema({
 });
 
 
-listingSchema.post("findOneAndDelete", async function (doc) {
-  if (doc) {
-    await Review.deleteMany({
-      _id: { $in: doc.reviews }
-    });
+listingSchema.pre("save", async function (next) {
+  if (!this.embedding || this.embedding.length === 0) {
+    const generateEmbedding = require("../utils/embedding");
+
+    const text = `${this.title} ${this.description} ${this.location} ${this.category}`;
+
+    this.embedding = await generateEmbedding(text);
   }
+  next();
 });
+
 module.exports = mongoose.model("Listing", listingSchema);
