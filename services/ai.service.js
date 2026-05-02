@@ -17,9 +17,12 @@ const generateDescription = async (title) => {
     });
     return response.choices[0].message.content;
   } catch (err) {
-    console.error("AI Error:", err.code);
-    return `${title} is a wonderful place offering comfort, great location, and a memorable stay experience. Perfect for travelers looking for relaxation and convenience.`;
-  }
+  console.error("❌ AI ERROR:", err);
+
+  return res.status(500).json({
+    description: "Nice place with great comfort and amazing stay experience."
+  });
+}
 };
 
 const getEmbedding = async (text) => {
