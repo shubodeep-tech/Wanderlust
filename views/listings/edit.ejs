@@ -1,92 +1,173 @@
-<div class="mb-3">
-  <label class="form-label">Category</label>
+<% layout("layouts/boilerplate") %>
 
-  <!-- Hidden input -->
-  <input 
-    type="hidden" 
-    name="listing[category]" 
-    id="category" 
-    value="<%= listing.category %>" 
-    required
-  />
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
 
-  <!-- CATEGORY BAR -->
-  <div class="filters-bar">
+      <h3 class="mb-4 text-center">Edit Listing</h3>
 
-    <div class="filter <%= listing.category === 'trending' ? 'active' : '' %>" data-category="trending">
-      <i class="fa-solid fa-fire"></i>
-      <span>Trending</span>
+      <form
+        method="POST"
+        action="/listings/<%= listing._id %>?_method=PUT"
+        enctype="multipart/form-data"
+        class="needs-validation"
+        novalidate
+      >
+
+        <!-- TITLE -->
+        <div class="mb-3">
+          <label class="form-label">Title</label>
+          <input
+            name="listing[title]"
+            type="text"
+            class="form-control"
+            value="<%= listing.title %>"
+            required
+          />
+          <div class="invalid-feedback">Title is required</div>
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          <textarea
+            name="listing[description]"
+            class="form-control"
+            required
+          ><%= listing.description %></textarea>
+          <div class="invalid-feedback">Description is required</div>
+        </div>
+
+        <!-- IMAGE -->
+        <div class="mb-3">
+          <label class="form-label">Upload New Image (optional)</label>
+          <input
+            type="file"
+            name="listing[image]"
+            class="form-control"
+            accept="image/*"
+          />
+          <!-- show current image -->
+          <img
+            src="<%= listing.image?.url %>"
+            class="mt-2"
+            style="width:100%; max-height:200px; object-fit:cover; border-radius:10px;"
+          />
+        </div>
+
+        <!-- PRICE + COUNTRY -->
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Price</label>
+            <input
+              name="listing[price]"
+              type="number"
+              class="form-control"
+              value="<%= listing.price %>"
+              required
+              min="0"
+            />
+            <div class="invalid-feedback">Price is required</div>
+          </div>
+
+          <div class="col-md-8 mb-3">
+            <label class="form-label">Country</label>
+            <input
+              name="listing[country]"
+              type="text"
+              class="form-control"
+              value="<%= listing.country %>"
+              required
+            />
+            <div class="invalid-feedback">Country is required</div>
+          </div>
+        </div>
+
+        <!-- LOCATION -->
+        <div class="mb-3">
+          <label class="form-label">Location</label>
+          <input
+            name="listing[location]"
+            type="text"
+            class="form-control"
+            value="<%= listing.location %>"
+            required
+          />
+          <div class="invalid-feedback">Location is required</div>
+        </div>
+
+        <!-- CATEGORY -->
+        <div class="mb-3">
+          <label class="form-label">Category</label>
+
+          <input
+            type="hidden"
+            name="listing[category]"
+            id="category"
+            value="<%= listing.category %>"
+          />
+
+          <div class="filters-bar">
+            <div class="filter <%= listing.category === 'trending' ? 'active' : '' %>" data-category="trending"><i class="fa-solid fa-fire"></i><span>Trending</span></div>
+            <div class="filter <%= listing.category === 'rooms' ? 'active' : '' %>" data-category="rooms"><i class="fa-solid fa-bed"></i><span>Rooms</span></div>
+            <div class="filter <%= listing.category === 'iconic_cities' ? 'active' : '' %>" data-category="iconic_cities"><i class="fa-solid fa-city"></i><span>Cities</span></div>
+            <div class="filter <%= listing.category === 'mountains' ? 'active' : '' %>" data-category="mountains"><i class="fa-solid fa-mountain"></i><span>Mountains</span></div>
+            <div class="filter <%= listing.category === 'castles' ? 'active' : '' %>" data-category="castles"><i class="fa-solid fa-chess-rook"></i><span>Castles</span></div>
+            <div class="filter <%= listing.category === 'beaches' ? 'active' : '' %>" data-category="beaches"><i class="fa-solid fa-umbrella-beach"></i><span>Beaches</span></div>
+            <div class="filter <%= listing.category === 'farms' ? 'active' : '' %>" data-category="farms"><i class="fa-solid fa-tractor"></i><span>Farms</span></div>
+            <div class="filter <%= listing.category === 'camping' ? 'active' : '' %>" data-category="camping"><i class="fa-solid fa-campground"></i><span>Camping</span></div>
+            <div class="filter <%= listing.category === 'arctic' ? 'active' : '' %>" data-category="arctic"><i class="fa-solid fa-snowflake"></i><span>Arctic</span></div>
+            <div class="filter <%= listing.category === 'luxury' ? 'active' : '' %>" data-category="luxury"><i class="fa-solid fa-gem"></i><span>Luxury</span></div>
+            <div class="filter <%= listing.category === 'nature' ? 'active' : '' %>" data-category="nature"><i class="fa-solid fa-tree"></i><span>Nature</span></div>
+            <div class="filter <%= listing.category === 'lake' ? 'active' : '' %>" data-category="lake"><i class="fa-solid fa-water"></i><span>Lake</span></div>
+          </div>
+
+          <div id="categoryError" class="text-danger mt-1" style="display:none;">
+            Please select a category
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-dark w-100 mt-2">
+          Update Listing
+        </button>
+
+      </form>
     </div>
-
-    <div class="filter <%= listing.category === 'rooms' ? 'active' : '' %>" data-category="rooms">
-      <i class="fa-solid fa-bed"></i>
-      <span>Rooms</span>
-    </div>
-
-    <div class="filter <%= listing.category === 'iconic_cities' ? 'active' : '' %>" data-category="iconic_cities">
-      <i class="fa-solid fa-city"></i>
-      <span>Cities</span>
-    </div>
-
-    <div class="filter <%= listing.category === 'mountains' ? 'active' : '' %>" data-category="mountains">
-      <i class="fa-solid fa-mountain"></i>
-      <span>Mountains</span>
-    </div>
-
-    <div class="filter <%= listing.category === 'castles' ? 'active' : '' %>" data-category="castles">
-      <i class="fa-solid fa-chess-rook"></i>
-      <span>Castles</span>
-    </div>
-
-    <div class="filter <%= listing.category === 'beaches' ? 'active' : '' %>" data-category="beaches">
-      <i class="fa-solid fa-umbrella-beach"></i>
-      <span>Beaches</span>
-    </div>
-
-    <div class="filter <%= listing.category === 'farms' ? 'active' : '' %>" data-category="farms">
-      <i class="fa-solid fa-tractor"></i>
-      <span>Farms</span>
-    </div>
-
-    <div class="filter <%= listing.category === 'camping' ? 'active' : '' %>" data-category="camping">
-      <i class="fa-solid fa-campground"></i>
-      <span>Camping</span>
-    </div>
-
-    <div class="filter <%= listing.category === 'arctic' ? 'active' : '' %>" data-category="arctic">
-      <i class="fa-solid fa-snowflake"></i>
-      <span>Arctic</span>
-    </div>
-
-    <div class="filter <%= listing.category === 'luxury' ? 'active' : '' %>" data-category="luxury">
-      <i class="fa-solid fa-gem"></i>
-      <span>Luxury</span>
-    </div>
-
-    <div class="filter <%= listing.category === 'nature' ? 'active' : '' %>" data-category="nature">
-      <i class="fa-solid fa-tree"></i>
-      <span>Nature</span>
-    </div>
-
-    <div class="filter <%= listing.category === 'lake' ? 'active' : '' %>" data-category="lake">
-      <i class="fa-solid fa-water"></i>
-      <span>Lake</span>
-    </div>
-
-  </div>
-
-  <div class="invalid-feedback d-block">
-    Please select a category
   </div>
 </div>
 
 <script>
-  document.querySelectorAll(".filter").forEach(el => {
-  el.addEventListener("click", () => {
-    document.querySelectorAll(".filter").forEach(f => f.classList.remove("active"));
-    el.classList.add("active");
+document.addEventListener("DOMContentLoaded", () => {
+  const filters = document.querySelectorAll(".filter");
+  const categoryInput = document.getElementById("category");
+  const categoryError = document.getElementById("categoryError");
 
-    document.getElementById("category").value = el.dataset.category;
+  // category click
+  filters.forEach(f => {
+    f.addEventListener("click", () => {
+      filters.forEach(el => el.classList.remove("active"));
+      f.classList.add("active");
+      categoryInput.value = f.dataset.category;
+      categoryError.style.display = "none";
+    });
   });
+
+  // Bootstrap validation
+  const forms = document.querySelectorAll(".needs-validation");
+  Array.from(forms).forEach(form => {
+    form.addEventListener("submit", (e) => {
+      if (!categoryInput.value) {
+        categoryError.style.display = "block";
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (!form.checkValidity()) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      form.classList.add("was-validated");
+    }, false);
+  });
+
 });
 </script>

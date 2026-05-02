@@ -6,66 +6,87 @@
 
       <h3 class="mb-4 text-center">Create a New Listing</h3>
 
-      <form 
-        method="POST" 
-        action="/listings" 
-        enctype="multipart/form-data"
-        class="needs-validation"
+      <form
+        method="POST"
+        action="/listings"
+        id="listingForm"
         novalidate
+        class="needs-validation"
+        enctype="multipart/form-data"
       >
 
         <!-- TITLE -->
         <div class="mb-3">
           <label class="form-label">Title</label>
-          <input name="listing[title]" type="text" class="form-control" required />
+          <input name="listing[title]" type="text" class="form-control" id="title" required />
+          <div class="invalid-feedback">Title is required</div>
         </div>
 
         <!-- DESCRIPTION -->
-        <div class="mb-3">
+        <div class="mb-3" needs-validation>
           <label class="form-label">Description</label>
-          <textarea name="listing[description]" class="form-control" required></textarea>
+          <textarea name="listing[description]" class="form-control" id="description"   novalidate required></textarea>
+          <div class="invalid-feedback">Description is required</div>
         </div>
 
         <!-- IMAGE -->
         <div class="mb-3">
           <label class="form-label">Upload Image</label>
-          <input type="file" name="listing[image]" class="form-control" />
+          <input type="file" name="listing[image]" class="form-control needs-validation" accept="image/*" alt="listing image" />
         </div>
 
         <!-- PRICE + COUNTRY -->
         <div class="row">
           <div class="col-md-4 mb-3">
             <label class="form-label">Price</label>
-            <input name="listing[price]" type="number" class="form-control" required />
+            <input name="listing[price]" type="number" class="form-control" id="price" required min="0" />
+            <div class="invalid-feedback">Price is required</div>
           </div>
 
           <div class="col-md-8 mb-3">
             <label class="form-label">Country</label>
-            <input name="listing[country]" type="text" class="form-control" required />
+            <input name="listing[country]" type="text" class="form-control" id="country" required />
+            <div class="invalid-feedback">Country is required</div>
           </div>
         </div>
 
         <!-- LOCATION -->
         <div class="mb-3">
           <label class="form-label">Location</label>
-          <input name="listing[location]" type="text" class="form-control" required />
+          <input name="listing[location]" type="text" class="form-control" id="location" required />
+          <div class="invalid-feedback">Location is required</div>
         </div>
 
         <!-- CATEGORY -->
         <div class="mb-3">
           <label class="form-label">Category</label>
 
-          <input id="category" name="listing[category]" type="hidden" required />
+          <input
+            type="hidden"
+            name="listing[category]"
+            id="category"
+            value=""
+          />
 
           <div class="filters-bar">
-            <div class="filter" data-category="trending">🔥 Trending</div>
-            <div class="filter" data-category="mountains">🏔 Mountains</div>
-            <div class="filter" data-category="beaches">🏖 Beaches</div>
-            <div class="filter" data-category="rooms">🛏 Rooms</div>
+            <div class="filter" data-category="trending"><i class="fa-solid fa-fire"></i> Trending</div>
+            <div class="filter" data-category="mountains"><i class="fa-solid fa-mountain"></i> Mountains</div>
+            <div class="filter" data-category="beaches"><i class="fa-solid fa-umbrella-beach"></i> Beaches</div>
+            <div class="filter" data-category="iconic_cities"><i class="fa-solid fa-city"></i> Cities</div>
+            <div class="filter" data-category="rooms"><i class="fa-solid fa-bed"></i> Rooms</div>
+            <div class="filter" data-category="farms"><i class="fa-solid fa-tractor"></i> Farms</div>
+            <div class="filter" data-category="camping"><i class="fa-solid fa-campground"></i> Camping</div>
+            <div class="filter" data-category="castles"><i class="fa-solid fa-chess-rook"></i> Castles</div>
+            <div class="filter" data-category="arctic"><i class="fa-solid fa-snowflake"></i> Arctic</div>
+            <div class="filter" data-category="luxury"><i class="fa-solid fa-gem"></i> Luxury</div>
+            <div class="filter" data-category="nature"><i class="fa-solid fa-tree"></i> Nature</div>
+            <div class="filter" data-category="lake"><i class="fa-solid fa-water"></i> Lake</div>
           </div>
-        </div>
 
-        <button type="submit" class="btn btn-dark w-100">
+          <!-- shown/hidden by JS -->
+          
+
+        <button type="submit" class="btn btn-dark w-100 mt-2">
           Add Listing
         </button>
 
@@ -76,31 +97,43 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-
   const filters = document.querySelectorAll(".filter");
-  const input = document.getElementById("category");
+  const categoryInput = document.getElementById("category");
 
-  // SELECT CATEGORY
+
+  
   filters.forEach(f => {
     f.addEventListener("click", () => {
       filters.forEach(el => el.classList.remove("active"));
       f.classList.add("active");
-      input.value = f.dataset.category;
+      categoryInput.value = f.dataset.category;
+      
+      document.querySelector(".filters-bar").style.borderBottom = "2px solid #28a745";
     });
   });
 
+  
+  const forms = document.querySelectorAll(".needs-validation");
 
-  document.querySelector("form").addEventListener("submit", (e) => {
-    if (!input.value) {
-      e.preventDefault();
-      alert("Please select a category!");
-    }
+  Array.from(forms).forEach(form => {
+    form.addEventListener("submit", (e) => {
+
+      
+      if (!categoryInput.value) {
+       
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      
+      if (!form.checkValidity()) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      form.classList.add("was-validated"); 
+    }, false);
   });
-
-  // 🚀 AUTO DEFAULT (NO EMPTY CATEGORY EVER)
-  if (filters.length > 0) {
-    filters[0].click();
-  }
 
 });
 </script>

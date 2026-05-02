@@ -1,7 +1,9 @@
-const { getEmbedding } = require("../services/embedding.service");
-
-async function generateEmbedding(text) {
-  return await getEmbedding(text);
+class ExpressError extends Error {
+  constructor(statusCode, message) {
+    super();
+    this.statusCode = statusCode;
+    this.message = message;
+  }
 }
 
-module.exports = generateEmbedding;
+module.exports = ExpressError;

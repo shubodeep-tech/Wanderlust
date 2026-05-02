@@ -2,6 +2,7 @@ const OpenAI = require("openai");
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+
 const generateDescription = async (title) => {
   try {
     const response = await openai.chat.completions.create({
@@ -15,8 +16,8 @@ const generateDescription = async (title) => {
     });
     return response.choices[0].message.content;
   } catch (err) {
-    console.error("AI Error:", err.code);
-    return `${title} is a wonderful place offering comfort and a memorable stay.`;
+    console.error("AI ERROR:", err);
+    return "Nice place with great comfort and amazing stay experience.";
   }
 };
 

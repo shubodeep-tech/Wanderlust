@@ -1,29 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
-
   const mapDiv = document.getElementById("map");
   if (!mapDiv) return;
-
   if (!mapToken || typeof mapboxgl === "undefined") return;
-
-  if (typeof listingData === "undefined") {
-    console.warn("listingData missing");
-    return;
-  }
-  
-  console.log("Listing Data:", listingData);
-  console.log("Coordinates:", listingData?.geometry?.coordinates);
+  if (typeof listingData === "undefined") return;
 
   mapboxgl.accessToken = mapToken;
 
-  let coords = [77.2090, 28.6139]; 
+  let coords = [77.2090, 28.6139]; // default Delhi
 
   if (
     Array.isArray(listingData?.geometry?.coordinates) &&
     listingData.geometry.coordinates.length === 2
   ) {
     coords = listingData.geometry.coordinates;
-  } else {
-    console.warn("Invalid coordinates:", listingData.geometry);
   }
 
   const map = new mapboxgl.Map({
@@ -42,5 +31,4 @@ document.addEventListener("DOMContentLoaded", () => {
       )
     )
     .addTo(map);
-
 });

@@ -18,6 +18,17 @@ module.exports.createReview = async (req, res) => {
   res.redirect(`/listings/${id}`);
 };
 
+module.exports.updateReview = async (req, res) => {
+  const { id, reviewId } = req.params;
+
+  await Review.findByIdAndUpdate(reviewId, {
+    ...req.body.review,
+  });
+
+  req.flash("success", "Review updated!");
+  res.redirect(`/listings/${id}`);
+};
+
 
 module.exports.deleteReview = async (req, res) => {
   let  { id, reviewId } = req.params;
@@ -31,3 +42,4 @@ module.exports.deleteReview = async (req, res) => {
   req.flash("success", "Review deleted!");
   res.redirect(`/listings/${id}`);
 };
+

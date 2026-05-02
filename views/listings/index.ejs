@@ -1,6 +1,5 @@
 <% layout("layouts/boilerplate") %>
 
-<!-- FILTER BAR -->
 <div class="filters-bar mt-3 px-3">
   <% const categories = [
     ["trending","fa-fire","Trending"],
@@ -18,7 +17,8 @@
   ]; %>
 
   <% categories.forEach(cat => { %>
-    <div class="filter" data-category="<%= cat[0] %>">
+    <div class="filter <%= category === cat[0] ? 'active' : '' %>"
+         data-category="<%= cat[0] %>">
       <i class="fa-solid <%= cat[1] %>"></i>
       <p><%= cat[2] %></p>
     </div>
@@ -27,7 +27,6 @@
 
 <h3 class="mb-4 px-3">All Listings</h3>
 
-<!-- LISTINGS -->
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 px-3">
 
   <% if (listings.length === 0) { %>
@@ -35,37 +34,33 @@
   <% } %>
 
   <% listings.forEach(listing => { %>
-
     <div class="col">
       <div class="card listing-card h-100">
 
-        <!-- IMAGE -->
         <a href="/listings/<%= listing._id %>" class="listing-link">
-          <img 
-            src="<%= listing.image?.url || '/default.jpg' %>" 
+          <img
+            src="<%= listing.image?.url || '/default.jpg' %>"
             class="card-img-top"
           />
         </a>
 
-        <!-- WISHLIST -->
         <% if (currUser) { %>
           <form action="/listings/<%= listing._id %>/wishlist" method="POST">
-            <button class="wishlist-btn">❤️</button>
+            <button class="wishlist-btn">
+              <i class="fa-regular fa-heart"></i>
+            </button>
           </form>
         <% } %>
 
-        <!-- BODY -->
         <div class="card-body">
           <strong><%= listing.title %></strong><br>
-
-          <span class="price">
+          <span class="price" data-price="<%= listing.price %>">
             ₹ <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %>
           </span> / night
         </div>
 
       </div>
     </div>
-
   <% }) %>
 
 </div>
