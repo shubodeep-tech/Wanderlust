@@ -72,7 +72,11 @@ const createListing = async (req, res) => {
     };
 
     const text = `${newListing.title} ${newListing.description} ${newListing.location} ${newListing.category}`;
-    newListing.embedding = await getEmbedding(text);
+   try {
+     newListing.embedding = await getEmbedding(text);
+    } catch {
+     newListing.embedding = [];
+   }
 
     await newListing.save();
 
