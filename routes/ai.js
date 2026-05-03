@@ -24,4 +24,4 @@ router.post(
   wrapAsync(aiController.generateDesc) 
 );
 
-module.exports = router;
+module.exports = router;5

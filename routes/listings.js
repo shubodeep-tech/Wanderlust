@@ -10,12 +10,18 @@ const listingController = require("../controllers/listings");
 
 const multer = require("multer");
 const { storage } = require("../cloudConfig.js");
-const upload = multer({ storage });
-console.log("isLoggedIn:", typeof isLoggedIn);
-console.log("validateListing:", typeof validateListing);
-console.log("createListing:", typeof listingController.createListing);
-console.log("index:", typeof listingController.index);
-console.log("upload:", typeof upload.single);
+
+// ✅ only allow real image types
+const fileFilter = (req, file, cb) => {
+  const allowed = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+  if (allowed.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error("Only image files are allowed (jpeg, png, webp, gif)"), false);
+  }
+};
+
+const upload = multer({ storage, fileFilter }); // ✅ fileFilter added
 
 router
   .route("/")
@@ -27,18 +33,12 @@ router
     wrapAsync(listingController.createListing)
   );
 
-
 router.get("/new", isLoggedIn, listingController.renderNewForm);
-
 
 router.get("/wishlist", isLoggedIn, async (req, res) => {
   const user = await User.findById(req.user._id).populate("wishlist");
-
-  res.render("listings/wishlist", {
-    listings: user.wishlist,
-  });
+  res.render("listings/wishlist", { listings: user.wishlist });
 });
-
 
 router.get(
   "/:id/edit",
@@ -46,7 +46,6 @@ router.get(
   isOwner,
   wrapAsync(listingController.renderEditForm)
 );
-
 
 router.post("/:id/wishlist", isLoggedIn, async (req, res) => {
   const listing = await Listing.findById(req.params.id);
@@ -60,7 +59,6 @@ router.post("/:id/wishlist", isLoggedIn, async (req, res) => {
   req.flash("success", "Added to wishlist!");
   res.redirect(`/listings/${listing._id}`);
 });
-
 
 router
   .route("/:id")
@@ -78,4 +76,4 @@ router
     wrapAsync(listingController.destroyListing)
   );
 
-  module.exports = router;
+module.exports = router;

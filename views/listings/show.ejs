@@ -2,10 +2,8 @@
 
 <div class="show-wrapper">
 
-  
   <h2 class="show-title"><%= listing.title %></h2>
 
-  
   <p class="show-owner">
     Hosted by <strong><%= listing.owner?.username || "Unknown" %></strong>
   </p>
@@ -15,51 +13,70 @@
       src="<%= listing.image?.url || '/default.jpg' %>" 
       class="show-img"
     />
-
     <% if (currUser) { %>
       <form action="/listings/<%= listing._id %>/wishlist" method="POST">
-        <button class="wishlist-btn">❤️</button>
+        <button class="wishlist-btn">
+          <i class="fa-regular fa-heart"></i>
+        </button>
       </form>
     <% } %>
   </div>
 
-  
   <div class="show-info">
-
     <p class="show-location">
-      📍 <%= listing.location %>, <%= listing.country %>
+      <i class="fa-solid fa-location-dot"></i>&nbsp;&nbsp;<%= listing.location %>, <%= listing.country %>
     </p>
-
     <p class="show-price">
       ₹ <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %> / night
     </p>
-
     <p class="show-desc"><%= listing.description %></p>
   </div>
 
   <% if (currUser && listing.owner && listing.owner._id.equals(currUser._id)) { %>
     <div class="btns">
       <a href="/listings/<%= listing._id %>/edit" class="btn btn-danger">Edit</a>
-
       <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
         <button class="btn btn-dark">Delete</button>
       </form>
     </div>
   <% } %>
 
-
   <% if (currUser) { %>
     <hr/>
     <h4>Leave a review</h4>
+    <form action="/listings/<%= listing._id %>/reviews" method="POST" id="reviewForm" novalidate>
 
-    <form action="/listings/<%= listing._id %>/reviews" method="POST">
-      <input type="range" min="1" max="5" name="review[rating]" />
-      <textarea name="review[comment]" class="form-control mt-2"></textarea>
+      <div class="mb-2">
+        <label class="form-label">Rating</label>
+        <input
+          type="range"
+          min="1" max="5"
+          value="3"
+          name="review[rating]"
+          id="ratingInput"
+          class="form-range"
+        />
+        <small id="ratingDisplay">Rating: 3 / 5</small>
+      </div>
+
+      <div class="mb-2">
+        <textarea
+          name="review[comment]"
+          id="reviewComment"
+          class="form-control mt-2"
+          placeholder="Write your review..."
+          rows="3"
+          required
+        ></textarea>
+        <div id="commentError" class="text-danger mt-1" style="display:none;">
+          Please write a comment
+        </div>
+      </div>
+
       <button class="btn btn-dark mt-2">Submit</button>
     </form>
   <% } %>
 
-  
   <% if (listing.reviews && listing.reviews.length > 0) { %>
     <hr/>
     <h4>All Reviews</h4>
@@ -67,24 +84,105 @@
     <% listing.reviews.forEach(review => { %>
       <div class="card review-card mb-3">
         <div class="card-body">
+
           <h6>@<%= review.author?.username || "Anonymous" %></h6>
-          <p><%= review.comment %></p>
-          <small>⭐ <%= review.rating %> / 5</small>
+
+          <div id="review-display-<%= review._id %>">
+            <p><%= review.comment %></p>
+            <small>⭐ <%= review.rating %> / 5</small>
+          </div>
+
+          <div id="review-edit-<%= review._id %>" style="display:none;">
+            <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=PUT">
+              <input type="range" min="1" max="5" name="review[rating]" value="<%= review.rating %>" class="form-range"/>
+              <textarea name="review[comment]" class="form-control mt-2"><%= review.comment %></textarea>
+              <button class="btn btn-success btn-sm mt-2">Update</button>
+              <button type="button" class="btn btn-secondary btn-sm mt-2"
+                onclick="toggleEdit('<%= review._id %>')">Cancel</button>
+            </form>
+          </div>
+
+          <% if (currUser && review.author && review.author._id.equals(currUser._id)) { %>
+            <div class="mt-2">
+              <button class="btn btn-warning btn-sm"
+                onclick="toggleEdit('<%= review._id %>')">Edit</button>
+              <form method="POST"
+                action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
+                style="display:inline;">
+                <button class="btn btn-danger btn-sm">Delete</button>
+              </form>
+            </div>
+          <% } %>
+
         </div>
       </div>
     <% }) %>
   <% } %>
 
- 
   <hr/>
   <h4>Where you'll be</h4>
   <div id="map"></div>
 
 </div>
 
-<script>
-  const mapToken = "<%= mapToken %>";
-  const listingData = <%- JSON.stringify(listing) %>;
+<!-- ✅ safe JSON — no single quote crash -->
+<script type="application/json" id="listing-data">
+  <%- JSON.stringify(listing) %>
 </script>
 
-<script src="/js/map.js"></script>
+<script>
+  const mapToken = "<%= mapToken %>";
+  const listingData = JSON.parse(
+    document.getElementById("listing-data").textContent
+  );
+
+  // rating slider
+  const ratingInput = document.getElementById("ratingInput");
+  const ratingDisplay = document.getElementById("ratingDisplay");
+  if (ratingInput) {
+    ratingInput.addEventListener("input", () => {
+      ratingDisplay.textContent = `Rating: ${ratingInput.value} / 5`;
+    });
+  }
+
+  // review validation
+  const reviewForm = document.getElementById("reviewForm");
+  if (reviewForm) {
+    reviewForm.addEventListener("submit", (e) => {
+      const comment = document.getElementById("reviewComment");
+      const commentError = document.getElementById("commentError");
+      if (!comment.value.trim()) {
+        e.preventDefault();
+        comment.classList.add("is-invalid");
+        commentError.style.display = "block";
+      } else {
+        comment.classList.remove("is-invalid");
+        comment.classList.add("is-valid");
+        commentError.style.display = "none";
+      }
+    });
+
+    document.getElementById("reviewComment").addEventListener("input", function() {
+      if (this.value.trim()) {
+        this.classList.remove("is-invalid");
+        this.classList.add("is-valid");
+      } else {
+        this.classList.remove("is-valid");
+      }
+    });
+  }
+
+  function toggleEdit(id) {
+    const display = document.getElementById(`review-display-${id}`);
+    const edit = document.getElementById(`review-edit-${id}`);
+    if (edit.style.display === "none") {
+      edit.style.display = "block";
+      display.style.display = "none";
+    } else {
+      edit.style.display = "none";
+      display.style.display = "block";
+    }
+  }
+</script>
+
+<script src="/js/map.js"></script> 

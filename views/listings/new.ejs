@@ -1,206 +1,138 @@
 <% layout("layouts/boilerplate") %>
 
-
 <div class="container mt-4">
   <div class="row justify-content-center">
     <div class="col-12 col-md-8 col-lg-6">
 
-      <h3 class="mb-4 text-center">Create a New Listing</h3>
+      <h3 c-lass="mb-4 text-center">Create a New Listing</h3>
 
-      <form 
-        method="POST" 
-        action="/listings" 
-        enctype="multipart/form-data"
-        novalidate 
+      <form
+        method="POST"
+        action="/listings"
+        id="listingForm"
+        novalidate
         class="needs-validation"
+        enctype="multipart/form-data"
       >
 
+        <!-- TITLE -->
         <div class="mb-3">
           <label class="form-label">Title</label>
-          <input
-            id="title"
-            name="listing[title]"
-            type="text"
-            class="form-control"
-            required
-          />
+          <input name="listing[title]" type="text" class="form-control" id="title" required />
+          <div class="invalid-feedback">Title is required</div>
         </div>
 
-        
-        <div class="mb-3">
+        <!-- DESCRIPTION -->
+        <div class="mb-3" needs-validation>
           <label class="form-label">Description</label>
-          <textarea
-            id="description"
-            name="listing[description]"
-            class="form-control"
-            rows="3"
-            required
-          ></textarea>
+          <textarea name="listing[description]" class="form-control" id="description"   novalidate required></textarea>
+          <div class="invalid-feedback">Description is required</div>
         </div>
 
-        <!-- AI BUTTON -->
-         <button type="button" id="generateBtn" class="btn btn-dark">
-          ✨ Generate Description
-      </button>
-        
-
-       
+        <!-- IMAGE -->
         <div class="mb-3">
           <label class="form-label">Upload Image</label>
-          <input type="file" name="listing[image]" class="form-control" />
+          <input type="file" name="listing[image]" class="form-control needs-validation" accept="image/*" alt="listing image" />
         </div>
 
-        
+        <!-- PRICE + COUNTRY -->
         <div class="row">
           <div class="col-md-4 mb-3">
             <label class="form-label">Price</label>
-            <input name="listing[price]" type="number" class="form-control" required />
+            <input name="listing[price]" type="number" class="form-control" id="price" required min="0" />
+            <div class="invalid-feedback">Price is required</div>
           </div>
 
           <div class="col-md-8 mb-3">
             <label class="form-label">Country</label>
-            <input name="listing[country]" type="text" class="form-control" required />
+            <input name="listing[country]" type="text" class="form-control" id="country" required />
+            <div class="invalid-feedback">Country is required</div>
           </div>
         </div>
 
-       
+        <!-- LOCATION -->
         <div class="mb-3">
           <label class="form-label">Location</label>
-          <input
-            id="location"
-            name="listing[location]"
-            type="text"
-            class="form-control"
-            required
-          />
+          <input name="listing[location]" type="text" class="form-control" id="location" required />
+          <div class="invalid-feedback">Location is required</div>
         </div>
 
-       
+        <!-- CATEGORY -->
         <div class="mb-3">
           <label class="form-label">Category</label>
 
-          
-          <input id="category" name="listing[category]" type="hidden" required />
+          <input
+            type="hidden"
+            name="listing[category]"
+            id="category"
+            value=""
+          />
 
           <div class="filters-bar">
-
-            <div class="filter" data-category="trending">
-              <i class="fa-solid fa-fire"></i>
-              Trending
-            </div>
-
-            <div class="filter" data-category="mountains">
-              <i class="fa-solid fa-mountain"></i>
-              Mountains
-            </div>
-
-            <div class="filter" data-category="beaches">
-              <i class="fa-solid fa-umbrella-beach"></i>
-              Beaches
-            </div>
-
-            <div class="filter" data-category="iconic_cities">
-              <i class="fa-solid fa-city"></i>
-              Cities
-            </div>
-
-            <div class="filter" data-category="rooms">
-              <i class="fa-solid fa-bed"></i>
-              Rooms
-            </div>
-
-            <div class="filter" data-category="farms">
-              <i class="fa-solid fa-tractor"></i>
-              Farms
-            </div>
-
-            <div class="filter" data-category="camping">
-              <i class="fa-solid fa-campground"></i>
-              Camping
-            </div>
-
-            <div class="filter" data-category="castles">
-              <i class="fa-solid fa-chess-rook"></i>
-              Castles
-            </div>
-
-            <div class="filter" data-category="arctic">
-              <i class="fa-solid fa-snowflake"></i>
-              Arctic
-            </div>
-
+            <div class="filter" data-category="trending"><i class="fa-solid fa-fire"></i> Trending</div>
+            <div class="filter" data-category="mountains"><i class="fa-solid fa-mountain"></i> Mountains</div>
+            <div class="filter" data-category="beaches"><i class="fa-solid fa-umbrella-beach"></i> Beaches</div>
+            <div class="filter" data-category="iconic_cities"><i class="fa-solid fa-city"></i> Cities</div>
+            <div class="filter" data-category="rooms"><i class="fa-solid fa-bed"></i> Rooms</div>
+            <div class="filter" data-category="farms"><i class="fa-solid fa-tractor"></i> Farms</div>
+            <div class="filter" data-category="camping"><i class="fa-solid fa-campground"></i> Camping</div>
+            <div class="filter" data-category="castles"><i class="fa-solid fa-chess-rook"></i> Castles</div>
+            <div class="filter" data-category="arctic"><i class="fa-solid fa-snowflake"></i> Arctic</div>
+            <div class="filter" data-category="luxury"><i class="fa-solid fa-gem"></i> Luxury</div>
+            <div class="filter" data-category="nature"><i class="fa-solid fa-tree"></i> Nature</div>
+            <div class="filter" data-category="lake"><i class="fa-solid fa-water"></i> Lake</div>
           </div>
 
-          <div class="invalid-feedback d-block">
-            Please select a category
-          </div>
-        </div>
+          <!-- shown/hidden by JS -->
+          
 
-        <!-- SUBMIT -->
-        <button type="submit" class="btn btn-dark w-40">
-     Add Listing
-    </button>
+        <button type="submit" class="btn btn-dark w-100 mt-2">
+          Add Listing
+        </button>
+
       </form>
-      <br>
-
     </div>
   </div>
 </div>
 
 <script>
-const filters = document.querySelectorAll(".filter");
-const input = document.getElementById("category");
-
-filters.forEach(f => {
-  f.addEventListener("click", () => {
-    filters.forEach(el => el.classList.remove("active"));
-    f.classList.add("active");
-    input.value = f.dataset.category;
-  });
-});
-</script>
-
-<!-- AI DESCRIPTION -->
-<script>
 document.addEventListener("DOMContentLoaded", () => {
+  const filters = document.querySelectorAll(".filter");
+  const categoryInput = document.getElementById("category");
 
-  const btn = document.getElementById("generateBtn");
 
-  btn.addEventListener("click", async () => {
+  
+  filters.forEach(f => {
+    f.addEventListener("click", () => {
+      filters.forEach(el => el.classList.remove("active"));
+      f.classList.add("active");
+      categoryInput.value = f.dataset.category;
+      
+      document.querySelector(".filters-bar").style.borderBottom = "2px solid #28a745";
+    });
+  });
 
-    const titleInput = document.querySelector('input[name="listing[title]"]');
-    const descInput = document.getElementById("description"); 
+  
+  const forms = document.querySelectorAll(".needs-validation");
 
-    const title = titleInput.value;
+  Array.from(forms).forEach(form => {
+    form.addEventListener("submit", (e) => {
 
-    if (!title) {
-      alert("Enter title first!");
-      return;
-    }
+      
+      if (!categoryInput.value) {
+       
+        e.preventDefault();
+        e.stopPropagation();
+      }
 
-    btn.innerText = "Generating...";
-    btn.disabled = true;   
+      
+      if (!form.checkValidity()) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
 
-    try {
-      const res = await fetch("/ai/generate-description", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ title })
-      });
-
-      const data = await res.json();
-
-      descInput.value = data.description;
-
-    } catch (err) {
-      console.error(err);
-      alert("AI failed");
-    }
-
-    btn.innerText = "✨ Generate Description";
-    btn.disabled = false;  
+      form.classList.add("was-validated"); 
+    }, false);
   });
 
 });
