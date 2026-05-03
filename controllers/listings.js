@@ -21,6 +21,17 @@ const renderNewForm = (req, res) => {
 // CREATE
 const createListing = async (req, res) => {
   try {
+
+    if (!req.user) {
+      req.flash("error", "Login required");
+      return res.redirect("/login");
+    }
+
+    if (!req.body.listing.category) {
+      req.flash("error", "Select a category");
+      return res.redirect("/listings/new");
+    }
+
     const geoResponse = await geocodingClient
       .forwardGeocode({ query: req.body.listing.location, limit: 1 })
       .send();
