@@ -2,7 +2,6 @@ if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 
-
 if (!process.env.MONGO_URI) throw new Error("MONGO_URI env var not set!");
 if (!process.env.SESSION_SECRET) throw new Error("SESSION_SECRET env var not set!");
 
