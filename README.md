@@ -5,6 +5,10 @@ Wanderlust is designed using a Monolithic MVC Architecture built on the MERN Sta
 
 The architecture of the application is such to be **scalable and extensible**, supporting **location-based Services**, **advanced searching**, and **Semantic/Vector based searching**.
 
+Preview:
+<img width="1470" height="890" alt="Screenshot 2026-05-11 at 21 34 48" src="https://github.com/user-attachments/assets/360740bd-d539-445e-b58f-b77a095ebf35" />
+
+
 LIVE DEMO:
 https://wanderlust-98lu.onrender.com/listings
 
